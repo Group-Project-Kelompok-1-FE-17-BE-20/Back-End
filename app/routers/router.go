@@ -47,6 +47,6 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.POST("/products", productHandlerAPI.CreateProduct)
 	// e.GET("/products/:product_id", productHandlerAPI.GetSingleProduct)
 	e.PUT("/products/:product_id", productHandlerAPI.UpdateProduct)
-	// e.DELETE("/products/:product_id", productHandlerAPI.Delete)
+	e.DELETE("/products/:product_id", productHandlerAPI.Delete)
 	// e.GET("products/:username", productHandlerAPI.GetProductofUser)
 }
