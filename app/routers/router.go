@@ -16,6 +16,10 @@ import (
 	_productHandler "Laptop/features/product/handler"
 	_productService "Laptop/features/product/service"
 
+	_StoreRepo "Laptop/features/store/data"
+	_StoreHandler "Laptop/features/store/handler"
+	_StoreService "Laptop/features/store/service"
+
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
@@ -37,11 +41,14 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.DELETE("/users/:user_id", userHandlerAPI.DeleteUserById, middlewares.JWTMiddleware())
 
 	// toko
-	// e.GET("/users/:user_id/store-attributes", userHandlerAPI.GetTokoById) // get data toko
-	// e.GET("/users/:user_id", userHandlerAPI.GetUserById, middlewares.JWTMiddleware())
-	// e.PUT("/users/:user_id", userHandlerAPI.UpdateUserById, middlewares.JWTMiddleware())
-	// e.DELETE("/users/:user_id", userHandlerAPI.DeleteUserById, middlewares.JWTMiddleware())
-
+	StoreRepo := _StoreRepo.New(db)
+	StoreService := _StoreService.New(StoreRepo)
+	StoreHandler := _StoreHandler.New(StoreService)
+	// e.GET("/stores", StoreHandler.GetAllStore,middlewares.JWTMiddleware())
+	e.GET("/stores/:store_id", StoreHandler.GetStoreById, middlewares.JWTMiddleware())
+	e.POST("/stores", StoreHandler.CreateStore, middlewares.JWTMiddleware())
+	e.PUT("/stores/:store_id", StoreHandler.UpdateStoreById, middlewares.JWTMiddleware())
+	e.DELETE("/stores/:store_id", StoreHandler.DeleteStoreById, middlewares.JWTMiddleware())
 	// product
 	//e.GET("/products", productHandlerAPI.GetAllProducts)
 	e.POST("/products", productHandlerAPI.CreateProduct)
