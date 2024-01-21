@@ -58,3 +58,25 @@ func (handler *ProductHandler) UpdateProduct(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success update data", nil))
 }
+
+// delete product
+func (handler *ProductHandler) Delete(c echo.Context) error {
+	ProductID := c.Param("product_id")
+
+	ProductID_int, errConv := strconv.Atoi(ProductID)
+	if errConv != nil {
+		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error convert id param", nil))
+	}
+
+	result, errRead := handler.productService.GetAll()
+	if errRead != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data. "+errRead.Error(), nil))
+	}
+
+	errDel := handler.productService.Delete(result, ProductID_int)
+	if errDel != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error delete data. "+errDel.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success delete data", nil))
+}
