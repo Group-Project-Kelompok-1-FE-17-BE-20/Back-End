@@ -80,3 +80,13 @@ func (handler *ProductHandler) Delete(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success delete data", nil))
 }
+
+// get all products
+func (handler *ProductHandler) GetAllProducts(c echo.Context) error {
+	result, errFind := handler.productService.GetAll()
+	if errFind != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data. "+errFind.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success read data.", result))
+}
