@@ -32,3 +32,15 @@ func (service *productService) Update(id int, input product.Core) error {
 	err := service.productData.Update(id, input)
 	return err
 }
+
+func (service *productService) GetAll() ([]product.Core, error) {
+	// logic
+	// memanggil func yg ada di data layer
+	results, err := service.productData.SelectAll()
+	return results, err
+}
+
+func (service *productService) Delete(input []product.Core, id int) error {
+	err := service.productData.Delete(input, id)
+	return err
+}
