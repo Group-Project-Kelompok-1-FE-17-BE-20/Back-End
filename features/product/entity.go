@@ -23,9 +23,11 @@ type Core struct {
 // interface untuk Data Layer
 type ProductDataInterface interface {
 	Insert(input Core) error
+	Update(id int, input Core) error
 }
 
 // interface untuk Service Layer
 type ProductServiceInterface interface {
 	Create(input Core) error
+	Update(id int, input Core) error
 }

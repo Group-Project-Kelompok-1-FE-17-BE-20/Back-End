@@ -27,3 +27,14 @@ func (repo *productQuery) Insert(input product.Core) error {
 
 	return nil
 }
+
+func (repo *productQuery) Update(idParam int, newUpdate product.Core) error {
+	newUpdateGorm := CoreToModel(newUpdate)
+
+	txUpdates := repo.db.Model(&Product{}).Where("id = ?", idParam).Updates(newUpdateGorm)
+	if txUpdates.Error != nil {
+		return txUpdates.Error
+	}
+
+	return nil
+}
