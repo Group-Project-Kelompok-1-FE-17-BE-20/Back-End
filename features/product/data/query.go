@@ -1,6 +1,7 @@
 package data
 
 import (
+	"Laptop/app/database"
 	"Laptop/features/product"
 	"errors"
 
@@ -32,7 +33,7 @@ func (repo *productQuery) Insert(input product.Core) error {
 func (repo *productQuery) Update(idParam int, newUpdate product.Core) error {
 	newUpdateGorm := CoreToModel(newUpdate)
 
-	txUpdates := repo.db.Model(&Product{}).Where("id = ?", idParam).Updates(newUpdateGorm)
+	txUpdates := repo.db.Model(&database.Product{}).Where("id = ?", idParam).Updates(newUpdateGorm)
 	if txUpdates.Error != nil {
 		return txUpdates.Error
 	}
@@ -56,7 +57,7 @@ func (repo *productQuery) Delete(input []product.Core, id int) error {
 }
 
 func (repo *productQuery) SelectAll() ([]product.Core, error) {
-	var productsDataGorm []Product
+	var productsDataGorm []database.Product
 	tx := repo.db.Find(&productsDataGorm) // select * from users;
 	if tx.Error != nil {
 		return nil, tx.Error
