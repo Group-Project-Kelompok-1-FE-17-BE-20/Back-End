@@ -5,10 +5,10 @@ import (
 )
 
 type StoreRequest struct {
-	UserID     uint `json:"user_id" form:"user_id"`
-	NamaToko   string
-	AlamatToko string
-	ImageToko  string
+	UserID     uint   `json:"user_id" form:"user_id"`
+	NamaToko   string `json:"nama_toko" form:"nama_toko"`
+	AlamatToko string `json:"alamat_toko" form:"alamat_toko"`
+	ImageToko  string `json:"image_toko" form:"image_toko"`
 }
 
 // Mapping dari struct TaskRequest To struct Core Task
