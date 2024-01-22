@@ -1,28 +1,12 @@
 package data
 
 import (
+	"Laptop/app/database"
 	"Laptop/features/product"
-
-	"gorm.io/gorm"
 )
 
-// struct product gorm model
-type Product struct {
-	gorm.Model
-	Storage     string  `gorm:"type:string" json:"storage" form:"storage"`
-	RAM         string  `gorm:"type:string" json:"ram" form:"ram"`
-	Price       float64 `gorm:"type:decimal(10,2)" json:"price" form:"price"`
-	Description string  `gorm:"type:string" json:"description" form:"description"`
-	Tipe        string  `gorm:"type:string" json:"model" form:"model"`
-	Gambar      string  `gorm:"type:string" json:"gambar" form:"gambar" binding:"uri"`
-	Brand       string  `gorm:"type:string" json:"brand" form:"brand"`
-	Processor   string  `gorm:"type:string" json:"processor" form:"processor"`
-	Categories  string  `gorm:"type:string" json:"categories" form:"categories"`
-	Stock       int     `gorm:"type:integer" json:"stock" form:"stock"`
-}
-
-func CoreToModel(input product.Core) Product {
-	return Product{
+func CoreToModel(input product.Core) database.Product {
+	return database.Product{
 		Storage:     input.Storage,
 		RAM:         input.RAM,
 		Price:       input.Price,
@@ -36,10 +20,10 @@ func CoreToModel(input product.Core) Product {
 	}
 }
 
-func CoretoModelGorm(data []product.Core) []Product {
-	var productsDataGorm []Product
+func CoretoModelGorm(data []product.Core) []database.Product {
+	var productsDataGorm []database.Product
 	for _, input := range data {
-		var productGorm = Product{
+		var productGorm = database.Product{
 			Storage:     input.Storage,
 			RAM:         input.RAM,
 			Price:       input.Price,
@@ -57,7 +41,7 @@ func CoretoModelGorm(data []product.Core) []Product {
 	return productsDataGorm
 }
 
-func ModelGormToCore(data []Product) []product.Core {
+func ModelGormToCore(data []database.Product) []product.Core {
 	var productsData []product.Core
 	for _, input := range data {
 		var productInput = product.Core{
