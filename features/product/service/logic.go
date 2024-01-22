@@ -44,3 +44,10 @@ func (service *productService) Delete(input []product.Core, id int) error {
 	err := service.productData.Delete(input, id)
 	return err
 }
+
+func (service *productService) GetSingle(productID_int int) (product.Core, error) {
+	// logic
+	// memanggil func yg ada di data layer
+	results, err := service.productData.GetSingleProduct(productID_int)
+	return results, err
+}
