@@ -24,10 +24,14 @@ type Core struct {
 type ProductDataInterface interface {
 	Insert(input Core) error
 	Update(id int, input Core) error
+	SelectAll() ([]Core, error)
+	Delete(input []Core, id int) error
 }
 
 // interface untuk Service Layer
 type ProductServiceInterface interface {
 	Create(input Core) error
 	Update(id int, input Core) error
+	GetAll() ([]Core, error)
+	Delete(input []Core, id int) error
 }

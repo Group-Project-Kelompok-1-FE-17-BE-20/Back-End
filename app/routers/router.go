@@ -50,10 +50,10 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.PUT("/stores/:store_id", StoreHandler.UpdateStoreById, middlewares.JWTMiddleware())
 	e.DELETE("/stores/:store_id", StoreHandler.DeleteStoreById, middlewares.JWTMiddleware())
 	// product
-	//e.GET("/products", productHandlerAPI.GetAllProducts)
 	e.POST("/products", productHandlerAPI.CreateProduct)
-	// e.GET("/products/:product_id", productHandlerAPI.GetSingleProduct)
 	e.PUT("/products/:product_id", productHandlerAPI.UpdateProduct)
-	// e.DELETE("/products/:product_id", productHandlerAPI.Delete)
+	e.DELETE("/products/:product_id", productHandlerAPI.Delete)
+	e.GET("/products", productHandlerAPI.GetAllProducts)
+	// e.GET("/products/:product_id", productHandlerAPI.GetSingleProduct)
 	// e.GET("products/:username", productHandlerAPI.GetProductofUser)
 }
