@@ -1,6 +1,7 @@
 package data
 
 import (
+	"Laptop/app/database"
 	"Laptop/features/user"
 	"Laptop/utils/responses"
 	"errors"
@@ -21,7 +22,7 @@ func New(database *gorm.DB) user.UserDataInterface {
 
 // Login implements user.UserDataInterface.
 func (r *userQuery) Login(email string) (user.CoreUser, error) {
-	var dataUser User
+	var dataUser database.User
 	tx := r.db.Where("email = ?", email).First(&dataUser)
 	if tx.Error != nil {
 		log.Error("Database error:", tx.Error)
@@ -53,7 +54,7 @@ func (r *userQuery) Insert(inputUser user.CoreUser) (uint, error) {
 
 // SelectAll implements user.UserDataInterface.
 func (r *userQuery) SelectAll() ([]user.CoreUser, error) {
-	var userData []User
+	var userData []database.User
 	tx := r.db.Find(&userData)
 	if tx.Error != nil {
 		return nil, tx.Error
@@ -69,7 +70,7 @@ func (r *userQuery) SelectAll() ([]user.CoreUser, error) {
 
 // SelectByID implements user.UserDataInterface.
 func (r *userQuery) Select(userId uint) (user.CoreUser, error) {
-	var userData User
+	var userData database.User
 	tx := r.db.First(&userData, userId)
 	if tx.Error != nil {
 		return user.CoreUser{}, tx.Error
@@ -84,7 +85,7 @@ func (r *userQuery) Select(userId uint) (user.CoreUser, error) {
 
 // // Update implements user.UserDataInterface.
 func (r *userQuery) Update(userId uint, userData user.CoreUser) error {
-	var user User
+	var user database.User
 	tx := r.db.First(&user, userId)
 	if tx.Error != nil {
 		return tx.Error
@@ -108,7 +109,7 @@ func (r *userQuery) Update(userId uint, userData user.CoreUser) error {
 
 // Delete implements user.UserDataInterface.
 func (r *userQuery) Delete(userId uint) error {
-	var user User
+	var user database.User
 	tx := r.db.Delete(&user, userId)
 	if tx.Error != nil {
 		return tx.Error
