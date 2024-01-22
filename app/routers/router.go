@@ -49,11 +49,12 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.POST("/stores", StoreHandler.CreateStore, middlewares.JWTMiddleware())
 	e.PUT("/stores/:store_id", StoreHandler.UpdateStoreById, middlewares.JWTMiddleware())
 	e.DELETE("/stores/:store_id", StoreHandler.DeleteStoreById, middlewares.JWTMiddleware())
+
 	// product
 	e.POST("/products", productHandlerAPI.CreateProduct)
 	e.PUT("/products/:product_id", productHandlerAPI.UpdateProduct)
 	e.DELETE("/products/:product_id", productHandlerAPI.Delete)
 	e.GET("/products", productHandlerAPI.GetAllProducts)
-	// e.GET("/products/:product_id", productHandlerAPI.GetSingleProduct)
+	e.GET("/products/:product_id", productHandlerAPI.GetSingleProduct)
 	// e.GET("products/:username", productHandlerAPI.GetProductofUser)
 }

@@ -57,6 +57,21 @@ func CoretoModelGorm(data []product.Core) []Product {
 	return productsDataGorm
 }
 
+func ModelToCore(input Product) product.Core {
+	return product.Core{
+		Storage:     input.Storage,
+		RAM:         input.RAM,
+		Price:       input.Price,
+		Description: input.Description,
+		Tipe:        input.Tipe,
+		Gambar:      input.Gambar,
+		Brand:       input.Gambar,
+		Processor:   input.Processor,
+		Categories:  input.Categories,
+		Stock:       input.Stock,
+	}
+}
+
 func ModelGormToCore(data []Product) []product.Core {
 	var productsData []product.Core
 	for _, input := range data {
