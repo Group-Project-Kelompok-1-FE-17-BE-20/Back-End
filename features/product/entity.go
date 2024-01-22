@@ -26,6 +26,7 @@ type ProductDataInterface interface {
 	Update(id int, input Core) error
 	SelectAll() ([]Core, error)
 	Delete(input []Core, id int) error
+	GetSingleProduct(productID_int int) (Core, error)
 }
 
 // interface untuk Service Layer
@@ -34,4 +35,5 @@ type ProductServiceInterface interface {
 	Update(id int, input Core) error
 	GetAll() ([]Core, error)
 	Delete(input []Core, id int) error
+	GetSingle(productID_int int) (Core, error)
 }
