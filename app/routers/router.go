@@ -38,7 +38,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 
 	cartData := _CartData.New(db)
 	cartService := _CartService.New(cartData)
-	_cartHandlerAPI := _CartHandler.New(cartService)
+	cartHandlerAPI := _CartHandler.New(cartService)
 
 	// user
 	e.POST("/login", userHandlerAPI.Login)
@@ -64,6 +64,6 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	// e.GET("products/:username", productHandlerAPI.GetProductofUser)
 
 	// shoppping cart
-	e.GET("/shopping-cart", _cartHandlerAPI.GetCart)
+	e.GET("/shopping-cart", cartHandlerAPI.GetCart)
 
 }
