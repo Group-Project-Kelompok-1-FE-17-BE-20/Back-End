@@ -2,12 +2,7 @@ package router
 
 import (
 	"Laptop/app/middlewares"
-	//_projectRepo "Laptop/controllers/project/data"
-	//_projectHandler "Laptop/controllers/project/handler"
-	//_projectService "Laptop/controllers/project/service"
-	//_taskRepo "Laptop/controllers/task/data"
-	//_taskHandler "Laptop/controllers/task/handler"
-	//_taskService "Laptop/controllers/task/service"
+
 	_userRepo "Laptop/features/user/data"
 	_userHandler "Laptop/features/user/handler"
 	_userService "Laptop/features/user/service"
@@ -19,6 +14,10 @@ import (
 	_StoreRepo "Laptop/features/store/data"
 	_StoreHandler "Laptop/features/store/handler"
 	_StoreService "Laptop/features/store/service"
+
+	_CartData "Laptop/features/shoppingcart/data"
+	_CartHandler "Laptop/features/shoppingcart/handler"
+	_CartService "Laptop/features/shoppingcart/service"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
@@ -33,6 +32,15 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	productService := _productService.New(productData)
 	productHandlerAPI := _productHandler.New(productService)
 
+	StoreRepo := _StoreRepo.New(db)
+	StoreService := _StoreService.New(StoreRepo)
+	StoreHandler := _StoreHandler.New(StoreService)
+
+	cartData := _CartData.New(db)
+	cartService := _CartService.New(cartData)
+	cartHandlerAPI := _CartHandler.New(cartService)
+
+	// user
 	e.POST("/login", userHandlerAPI.Login)
 	e.POST("/users", userHandlerAPI.CreateUser)
 	e.GET("/users", userHandlerAPI.GetAllUser)
@@ -40,10 +48,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.PUT("/users/:user_id", userHandlerAPI.UpdateUserById, middlewares.JWTMiddleware())
 	e.DELETE("/users/:user_id", userHandlerAPI.DeleteUserById, middlewares.JWTMiddleware())
 
-	// toko
-	StoreRepo := _StoreRepo.New(db)
-	StoreService := _StoreService.New(StoreRepo)
-	StoreHandler := _StoreHandler.New(StoreService)
+	// store
 	// e.GET("/stores", StoreHandler.GetAllStore,middlewares.JWTMiddleware())
 	e.GET("/stores/:store_id", StoreHandler.GetStoreById, middlewares.JWTMiddleware())
 	e.POST("/stores", StoreHandler.CreateStore, middlewares.JWTMiddleware())
@@ -57,4 +62,8 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.GET("/products", productHandlerAPI.GetAllProducts)
 	e.GET("/products/:product_id", productHandlerAPI.GetSingleProduct)
 	// e.GET("products/:username", productHandlerAPI.GetProductofUser)
+
+	// shoppping cart
+	e.GET("/shopping-cart", cartHandlerAPI.GetCart)
+
 }
