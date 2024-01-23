@@ -68,3 +68,15 @@ func (repo *productQuery) SelectAll() ([]product.Core, error) {
 
 	return allProductCore, nil
 }
+
+func (repo *productQuery) GetSingleProduct(productID_int int) (product.Core, error) {
+	var singleProductGorm Product
+	tx := repo.db.First(&singleProductGorm, productID_int)
+	if tx.Error != nil {
+		return product.Core{}, tx.Error
+	}
+
+	singleProductCore := ModelToCore(singleProductGorm)
+
+	return singleProductCore, nil
+}
