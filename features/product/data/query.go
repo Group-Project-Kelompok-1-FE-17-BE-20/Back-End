@@ -70,7 +70,7 @@ func (repo *productQuery) SelectAll() ([]product.Core, error) {
 }
 
 func (repo *productQuery) GetSingleProduct(productID_int int) (product.Core, error) {
-	var singleProductGorm Product
+	var singleProductGorm database.Product
 	tx := repo.db.First(&singleProductGorm, productID_int)
 	if tx.Error != nil {
 		return product.Core{}, tx.Error
