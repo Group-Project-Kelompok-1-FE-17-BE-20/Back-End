@@ -1,6 +1,7 @@
 package data
 
 import (
+	"Laptop/app/database"
 	store "Laptop/features/store"
 	"errors"
 
@@ -32,7 +33,7 @@ func (r *StoreQuery) Insert(input store.CoreStore) (uint, error) {
 	return newStore.ID, nil
 }
 func (r *StoreQuery) SelectAll(userID uint) ([]store.CoreStore, error) {
-	var dataStore []Store
+	var dataStore []database.Store
 	tx := r.db.Where("user_id", userID).Find(&dataStore)
 	if tx.Error != nil {
 		return nil, tx.Error
@@ -47,7 +48,7 @@ func (r *StoreQuery) SelectAll(userID uint) ([]store.CoreStore, error) {
 
 // Select implements task.TaskDataInterface.
 func (r *StoreQuery) Select(StoreID uint, userID uint) (store.CoreStore, error) {
-	var storeData Store
+	var storeData database.Store
 	tx := r.db.Where("id = ? AND user_id = ?", StoreID, userID).First(&storeData)
 	if tx.Error != nil {
 		return store.CoreStore{}, tx.Error
@@ -66,7 +67,7 @@ func (r *StoreQuery) Select(StoreID uint, userID uint) (store.CoreStore, error) 
 
 // Update implements task.TaskDataInterface.
 func (r *StoreQuery) Update(StoreID uint, userID uint, storeData store.CoreStore) error {
-	var Store Store
+	var Store database.Store
 	tx := r.db.Where("id = ? AND user_id = ?", StoreID, userID).First(&Store)
 	if tx.Error != nil {
 		return tx.Error
@@ -88,7 +89,7 @@ func (r *StoreQuery) Update(StoreID uint, userID uint, storeData store.CoreStore
 
 // Delete implements task.TaskDataInterface.
 func (r *StoreQuery) Delete(StoreID uint, userID uint) error {
-	var Store Store
+	var Store database.Store
 	tx := r.db.Where("id = ? AND user_id = ?", StoreID, userID).Delete(&Store)
 	if tx.Error != nil {
 		return tx.Error
