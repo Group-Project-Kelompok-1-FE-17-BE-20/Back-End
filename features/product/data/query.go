@@ -18,6 +18,17 @@ func New(db *gorm.DB) product.ProductDataInterface {
 	}
 }
 
+func (repo *productQuery) GetStoreID(userID uint) (uint, error) {
+	var storeData database.Store
+	tx := repo.db.Where("user_id = ?", userID).First(&storeData)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+
+	storeID := storeData.ID
+	return storeID, nil
+}
+
 func (repo *productQuery) Insert(input product.Core) error {
 	// simpan ke DB
 	newProductGorm := CoreToModel(input)

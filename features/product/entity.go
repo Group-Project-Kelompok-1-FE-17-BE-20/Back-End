@@ -6,6 +6,7 @@ import (
 
 type Core struct {
 	ID          uint      `json:"id" form:"id"`
+	StoreID     uint      `gorm:"not null" json:"store_id" form:"store_id"`
 	Storage     string    `gorm:"type:string" json:"storage" form:"storage"`
 	RAM         string    `gorm:"type:string" json:"ram" form:"ram"`
 	Price       float64   `gorm:"type:decimal(10,2)" json:"price" form:"price"`
@@ -22,6 +23,7 @@ type Core struct {
 
 // interface untuk Data Layer
 type ProductDataInterface interface {
+	GetStoreID(userID uint) (uint, error)
 	Insert(input Core) error
 	Update(id int, input Core) error
 	SelectAll() ([]Core, error)
@@ -31,6 +33,7 @@ type ProductDataInterface interface {
 
 // interface untuk Service Layer
 type ProductServiceInterface interface {
+	GetStoreID(userID uint) (uint, error)
 	Create(input Core) error
 	Update(id int, input Core) error
 	GetAll() ([]Core, error)

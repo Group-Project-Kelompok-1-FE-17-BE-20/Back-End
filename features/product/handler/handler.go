@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"Laptop/app/middlewares"
 	"Laptop/features/product"
 	"Laptop/utils/responses"
 	"net/http"
@@ -21,7 +22,17 @@ func New(service product.ProductServiceInterface) *ProductHandler {
 
 // insert product
 func (handler *ProductHandler) CreateProduct(c echo.Context) error {
+	// Mengambil ID pengguna dari token JWT yang terkait dengan permintaan
+	userID := middlewares.ExtractTokenUserId(c)
+	result, err := handler.productService.GetStoreID(userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
+	}
+
 	newProduct := ProductRequest{}
+
+	newProduct.StoreID = result
+
 	errBind := c.Bind(&newProduct)
 	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data. data not valid", nil))
