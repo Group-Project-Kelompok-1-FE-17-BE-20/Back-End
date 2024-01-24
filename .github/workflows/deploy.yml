@@ -31,7 +31,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/tokoLaptop-images:latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/tokolaptop-images:latest
 
   deploy-prod:
     runs-on: ubuntu-latest
@@ -47,6 +47,6 @@ jobs:
           script: |
             docker stop apiContainer
             docker rm apiContainer
-            docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/tokoLaptop-images
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/tokoLaptop-images
-            docker run -d -p 8083:8083 -e DBUSER=${{ secrets.DBUSER }} -e DBPASS=${{ secrets.DBPASS }} -e DBHOST=${{ secrets.DBHOST }} -e DBPORT=${{ secrets.DBPORT }} -e DBNAME=${{ secrets.DBNAME }} -e JWTSECRET=${{ secrets.JWTSECRET }} --name apiContainer ${{ secrets.DOCKERHUB_USERNAME }}/tokoLaptop-images:latest
+            docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/tokolaptop-images
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/tokolaptop-images
+            docker run -d -p 8083:8083 -e DBUSER=${{ secrets.DBUSER }} -e DBPASS=${{ secrets.DBPASS }} -e DBHOST=${{ secrets.DBHOST }} -e DBPORT=${{ secrets.DBPORT }} -e DBNAME=${{ secrets.DBNAME }} -e JWTSECRET=${{ secrets.JWTSECRET }} --name apiContainer ${{ secrets.DOCKERHUB_USERNAME }}/tokolaptop-images:latest
