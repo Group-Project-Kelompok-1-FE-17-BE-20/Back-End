@@ -10,6 +10,7 @@ type LoginRequest struct {
 }
 
 type UserRequest struct {
+	Id           uint   `form:"id"`
 	Username     string `json:"username" form:"username"`
 	Name         string `json:"nama_lengkap" form:"nama_lengkap"`
 	Email        string `json:"email" form:"email"`
@@ -26,6 +27,7 @@ type UserRequest struct {
 // Mapping dari struct requet to struct core
 func MapReqToCoreUser(req UserRequest) user.CoreUser {
 	return user.CoreUser{
+		Id:           req.Id,
 		Username:     req.Username,
 		NamaLengkap:  req.Name,
 		Email:        req.Email,
