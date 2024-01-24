@@ -86,3 +86,25 @@ func (handler *ItemHandler) UpdateItem(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success updating item", nil))
 }
+
+// update item
+func (handler *ItemHandler) DeleteItem(c echo.Context) error {
+	// mendapatkan productId
+	productId := c.QueryParam("productId")
+	intID, err := strconv.Atoi(productId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error convert data, "+err.Error(), nil))
+	}
+
+	result, errRead := handler.itemService.GetItemById(uint(intID))
+	if errRead != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data. "+errRead.Error(), nil))
+	}
+
+	errDelete := handler.itemService.Delete(result)
+	if errDelete != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error deleting project. "+errDelete.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success deleting item", nil))
+}

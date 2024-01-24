@@ -38,3 +38,15 @@ func (service *itemService) Update(productId uint, input shoppingcartitem.Core) 
 	err := service.itemData.Update(productId, input)
 	return err
 }
+
+func (service *itemService) GetItemById(productId uint) (shoppingcartitem.Core, error) {
+	// logic validation
+	res, err := service.itemData.GetItemById(productId)
+	return res, err
+}
+
+func (service *itemService) Delete(input shoppingcartitem.Core) error {
+	// logic validation
+	err := service.itemData.Delete(input)
+	return err
+}

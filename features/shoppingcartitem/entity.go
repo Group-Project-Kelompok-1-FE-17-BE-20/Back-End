@@ -21,6 +21,8 @@ type ItemDataInterface interface {
 	GetPrice(productID uint) (float64, error)
 	Insert(input Core) error
 	Update(productId uint, input Core) error
+	GetItemById(productId uint) (Core, error)
+	Delete(input Core) error
 }
 
 // interface untuk Service Layer
@@ -29,4 +31,6 @@ type ItemServiceInterface interface {
 	GetPrice(productID uint) (float64, error)
 	Create(input Core) error
 	Update(productId uint, input Core) error
+	GetItemById(productId uint) (Core, error)
+	Delete(input Core) error
 }
