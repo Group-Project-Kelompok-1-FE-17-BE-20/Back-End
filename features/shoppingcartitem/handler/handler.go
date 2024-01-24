@@ -60,3 +60,29 @@ func (handler *ItemHandler) CreateItem(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success insert data", newItem))
 }
+
+// update item
+func (handler *ItemHandler) UpdateItem(c echo.Context) error {
+	// mendapatkan productId
+	productId := c.QueryParam("productId")
+	intID, err := strconv.Atoi(productId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error convert data, "+err.Error(), nil))
+	}
+
+	// Mendapatkan data item dari body request
+	updatedItem := ItemRequest{}
+	errBind := c.Bind(&updatedItem)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data. data not valid", nil))
+	}
+
+	updatedItemCore := RequestToCore(updatedItem)
+
+	errUpdate := handler.itemService.Update(uint(intID), updatedItemCore)
+	if errUpdate != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error updating project. "+errUpdate.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success updating item", nil))
+}

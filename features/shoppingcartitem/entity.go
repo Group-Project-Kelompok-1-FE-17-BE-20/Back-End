@@ -20,6 +20,7 @@ type ItemDataInterface interface {
 	GetCartID(userID uint) (uint, error)
 	GetPrice(productID uint) (float64, error)
 	Insert(input Core) error
+	Update(productId uint, input Core) error
 }
 
 // interface untuk Service Layer
@@ -27,4 +28,5 @@ type ItemServiceInterface interface {
 	GetCartID(userID uint) (uint, error)
 	GetPrice(productID uint) (float64, error)
 	Create(input Core) error
+	Update(productId uint, input Core) error
 }
