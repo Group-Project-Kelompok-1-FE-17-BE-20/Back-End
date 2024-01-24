@@ -3,6 +3,7 @@ package data
 import (
 	"Laptop/app/database"
 	"Laptop/features/shoppingcartitem"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -57,6 +58,33 @@ func (repo *itemQuery) Update(productID uint, input shoppingcartitem.Core) error
 	txUpdates := repo.db.Model(&database.ShoppingCartItem{}).Where("product_id = ?", productID).Updates(newUpdateGorm)
 	if txUpdates.Error != nil {
 		return txUpdates.Error
+	}
+
+	return nil
+}
+
+func (repo *itemQuery) GetItemById(productID uint) (shoppingcartitem.Core, error) {
+	var singleItemGorm database.ShoppingCartItem
+	tx := repo.db.Where("product_id = ?", productID).First(&singleItemGorm)
+	if tx.Error != nil {
+		return shoppingcartitem.Core{}, tx.Error
+	}
+
+	singleItemCore := ModelToCore(singleItemGorm)
+
+	return singleItemCore, nil
+}
+
+func (repo *itemQuery) Delete(input shoppingcartitem.Core) error {
+	itemGorm := CoreToModel(input)
+
+	txDel := repo.db.Where("product_id = ?", itemGorm.ProductID).Delete(&itemGorm)
+	if txDel.Error != nil {
+		return txDel.Error
+	}
+
+	if txDel.RowsAffected == 0 {
+		return errors.New("item not found")
 	}
 
 	return nil
