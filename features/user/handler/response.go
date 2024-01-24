@@ -12,6 +12,7 @@ type LoginResponse struct {
 	// Role  string `json:"role"`
 }
 type UserResponse struct {
+	Id           uint      `json:"UserID"`
 	Username     string    `json:"username"`
 	Name         string    `json:"nama_lengkap"`
 	Email        string    `json:"email"`
@@ -29,6 +30,7 @@ type UserResponse struct {
 // mapping from userCore to UserResponse
 func MapCoreUserToRes(Core user.CoreUser) UserResponse {
 	return UserResponse{
+		Id:           Core.I
 		Username:     Core.Username,
 		Name:         Core.NamaLengkap,
 		Email:        Core.Email,
