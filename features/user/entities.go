@@ -8,7 +8,7 @@ import (
 
 type CoreUser struct {
 	gorm.Model
-	ID           uint
+	Id           uint
 	Username     string `json:"username" form:"username"`
 	NamaLengkap  string `json:"nama_lengkap" form:"nama_lengkap"`
 	Email        string `json:"email" form:"email" validate:"required" gorm:"unique"`
