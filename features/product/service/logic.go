@@ -16,6 +16,12 @@ func New(repo product.ProductDataInterface) product.ProductServiceInterface {
 	}
 }
 
+func (service *productService) GetStoreID(input uint) (uint, error) {
+	// logic validation
+	res, err := service.productData.GetStoreID(input)
+	return res, err
+}
+
 func (service *productService) Create(input product.Core) error {
 	// logic validation
 	err := service.productData.Insert(input)

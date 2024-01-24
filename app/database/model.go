@@ -6,24 +6,24 @@ import (
 
 type User struct {
 	gorm.Model
-	Username     string `gorm:"column:username;"`
-	NamaLengkap  string `gorm:"column:nama_lengkap;not null"`
-	Email        string `gorm:"column:email;not null;unique"`
-	Password     string `gorm:"column:password;not null"`
-	NomorHP      string `gorm:"column:nomer_hp;"`
-	Alamat       string `gorm:"column:alamat;"`
-	JenisKelamin string `gorm:"column:jenis_kelamin;"`
-	ImageProfil  string `gorm:"column:image_profil;"`
-	// Store        Store  `gorm:"foreignKey:StoreID" json:"store" form:"store"`
+	Username     string `gorm:"not null" json:"username" form:"username"`
+	NamaLengkap  string `gorm:"not null" json:"nama_lengkap" form:"nama_lengkap"`
+	Email        string `gorm:"not null;unique" json:"email" form:"email"`
+	Password     string `gorm:"not null" json:"password" form:"password"`
+	NomorHP      string `json:"nomor_hp" form:"nomor_hp"`
+	Alamat       string `json:"alamat" form:"alamat"`
+	JenisKelamin string `json:"jenis_kelamin" form:"jenis_kelamin"`
+	ImageProfil  string `json:"image_profil" form:"image_profil"`
+	Store        Store
 	ShoppingCart ShoppingCart
 }
 
 type Store struct {
 	gorm.Model
-	UserID     uint   `gorm:"column:user_id"`
-	NamaToko   string `gorm:"column:nama_toko;"`
-	AlamatToko string `gorm:"column:alamat_toko;"`
-	ImageToko  string `gorm:"column:image_toko;"`
+	UserID     uint   `gorm:"not null" json:"user_id" form:"user_id"`
+	NamaToko   string `gorm:"not null" json:"nama_toko" form:"nama_toko"`
+	AlamatToko string `gorm:"not null" json:"alamat_toko" form:"alamat_toko"`
+	ImageToko  string `json:"image_toko" form:"image_toko"`
 }
 
 type Product struct {
@@ -39,7 +39,7 @@ type Product struct {
 	Processor        string  `gorm:"type:string" json:"processor" form:"processor"`
 	Categories       string  `gorm:"type:string" json:"categories" form:"categories"`
 	Stock            int     `gorm:"type:integer" json:"stock" form:"stock"`
-	Store            Store   `gorm:"foreignKey:StoreID" json:"store" form:"store"`
+	Store            Store
 	ShoppingCartItem ShoppingCartItem
 }
 
@@ -58,6 +58,7 @@ type ShoppingCartItem struct {
 	TotalPrice     float64 `gorm:"not null" json:"totalPrice" form:"totalPrice"`
 	ShoppingCart   ShoppingCart
 }
+
 type Admin struct {
 	gorm.Model
 	UserID   uint64 `gorm:"user_id"`
