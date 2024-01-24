@@ -23,6 +23,10 @@ import (
 	_ItemHandler "Laptop/features/shoppingcartitem/handler"
 	_ItemService "Laptop/features/shoppingcartitem/service"
 
+	_adminRepo "Laptop/features/admin/data"
+	_adminHandler "Laptop/features/admin/handler"
+	_adminService "Laptop/features/admin/service"
+
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
@@ -47,6 +51,10 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	itemData := _ItemData.New(db)
 	itemService := _ItemService.New(itemData)
 	itemHandlerAPI := _ItemHandler.New(itemService)
+
+	adminRepo := _adminRepo.New(db)
+	adminService := _adminService.New(adminRepo)
+	adminHandlerAPI := _adminHandler.New(adminService)
 
 	// user
 	e.POST("/login", userHandlerAPI.Login)
@@ -76,4 +84,9 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 
 	// shoppping cart item
 	e.POST("/shopping-cart/:product_id", itemHandlerAPI.CreateItem)
+
+	// admin
+	e.POST("/logins", adminHandlerAPI.Login)
+	// e.GET("/users", adminHandlerAPI.GetAllUser)
+	e.GET("/userss", userHandlerAPI.GetAllUser)
 }

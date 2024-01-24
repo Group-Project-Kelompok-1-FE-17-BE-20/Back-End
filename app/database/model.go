@@ -58,3 +58,12 @@ type ShoppingCartItem struct {
 	TotalPrice     float64 `gorm:"not null" json:"totalPrice" form:"totalPrice"`
 	ShoppingCart   ShoppingCart
 }
+
+type Admin struct {
+	gorm.Model
+	UserID   uint64 `gorm:"user_id"`
+	Email    string `gorm:"column:email;not null;unique"`
+	Password string `gorm:"column:password;not null"`
+	// Users    User   `gorm:"foreignKey:AdminID"`
+	// Stores       []data.Store `
+}
