@@ -10,7 +10,7 @@ type User struct {
 	NamaLengkap  string `gorm:"not null" json:"nama_lengkap" form:"nama_lengkap"`
 	Email        string `gorm:"not null;unique" json:"email" form:"email"`
 	Password     string `gorm:"not null" json:"password" form:"password"`
-	NomorHP      string `json:"nomor_hp" form:"nomor_hp"`
+	NomorHP      string `json:"NomorHP" form:"NomorHP"`
 	Alamat       string `json:"alamat" form:"alamat"`
 	JenisKelamin string `json:"jenis_kelamin" form:"jenis_kelamin"`
 	ImageProfil  string `json:"image_profil" form:"image_profil"`
