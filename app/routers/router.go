@@ -79,13 +79,13 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.GET("/products/:product_id", productHandlerAPI.GetSingleProduct)
 	// e.GET("products/:username", productHandlerAPI.GetProductofUser)
 
-	// shoppping cart
+	// shopping cart
 	e.GET("/shopping-cart", cartHandlerAPI.GetCart, middlewares.JWTMiddleware())
 
-	// shoppping cart item
+	// shopping cart item
 	e.POST("/shopping-cart", itemHandlerAPI.CreateItem, middlewares.JWTMiddleware())
-	e.PUT("/shopping-cart/:product_id", itemHandlerAPI.CreateItem, middlewares.JWTMiddleware())
-	e.DELETE("/shopping-cart/:product_id", itemHandlerAPI.CreateItem, middlewares.JWTMiddleware())
+	e.PUT("/shopping-cart", itemHandlerAPI.UpdateItem, middlewares.JWTMiddleware())
+	//e.DELETE("/shopping-cart", itemHandlerAPI.Delete, middlewares.JWTMiddleware())
 
 	// admin
 	e.POST("/logins", adminHandlerAPI.Login)
