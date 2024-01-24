@@ -30,7 +30,7 @@ type UserResponse struct {
 // mapping from userCore to UserResponse
 func MapCoreUserToRes(Core user.CoreUser) UserResponse {
 	return UserResponse{
-		Id:           Core.ID
+		Id:           Core.ID,
 		Username:     Core.Username,
 		Name:         Core.NamaLengkap,
 		Email:        Core.Email,
