@@ -13,7 +13,7 @@ type CoreUser struct {
 	NamaLengkap  string `json:"nama_lengkap" form:"nama_lengkap"`
 	Email        string `json:"email" form:"email" validate:"required" gorm:"unique"`
 	Password     string `json:"password" form:"Password" validate:"required"`
-	NomorHP      string `json:"nomor" form:"NomorHP"`
+	NomorHP      string `json:"NomorHP" form:"NomorHP"`
 	Alamat       string `json:"Alamat" form:"Alamat"`
 	JenisKelamin string `json:"JenisKelamin" form:"JenisKelamin"`
 	ImageProfil  string `json:"ImageProfil" form:"ImageProfil"`
