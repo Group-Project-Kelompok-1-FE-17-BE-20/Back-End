@@ -7,6 +7,7 @@ import (
 
 func CoreToModel(input product.Core) database.Product {
 	return database.Product{
+		StoreID:     input.StoreID,
 		Storage:     input.Storage,
 		RAM:         input.RAM,
 		Price:       input.Price,
