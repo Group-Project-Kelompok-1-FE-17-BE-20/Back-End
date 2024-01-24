@@ -20,3 +20,15 @@ func (service *itemService) Create(input shoppingcartitem.Core) error {
 	err := service.itemData.Insert(input)
 	return err
 }
+
+func (service *itemService) GetCartID(input uint) (uint, error) {
+	// logic validation
+	res, err := service.itemData.GetCartID(input)
+	return res, err
+}
+
+func (service *itemService) GetPrice(input uint) (float64, error) {
+	// logic validation
+	res, err := service.itemData.GetPrice(input)
+	return res, err
+}

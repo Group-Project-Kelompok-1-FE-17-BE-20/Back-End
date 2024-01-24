@@ -14,6 +14,7 @@ func CoreCartToGorm(core shoppingcart.CoreCart) database.ShoppingCart {
 
 func CartGormToCartCore(model database.ShoppingCart) shoppingcart.CoreCart {
 	return shoppingcart.CoreCart{
+		ID:     model.ID,
 		UserID: model.UserID,
 		Status: model.Status,
 	}
