@@ -3,8 +3,12 @@ package data
 import (
 	"Laptop/app/database"
 	"Laptop/features/product"
+	"context"
 	"errors"
 
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
 
@@ -27,6 +31,24 @@ func (repo *productQuery) GetStoreID(userID uint) (uint, error) {
 
 	storeID := storeData.ID
 	return storeID, nil
+}
+
+func (repo *productQuery) Photo(c echo.Context) *uploader.UploadResult {
+	urlCloudinary := "cloudinary://377166738273893:ga3Zq7Ts84gJ-Ltn-gyMkTgHd40@dltcy9ghn"
+	fileHeader, _ := c.FormFile("image")
+
+	var product database.Product
+	_ = c.Bind(&product)
+
+	file, _ := fileHeader.Open()
+	//log.Println(fileHeader.Filename)
+
+	ctx := context.Background()
+	cldService, _ := cloudinary.NewFromURL(urlCloudinary)
+	resp, _ := cldService.Upload.Upload(ctx, file, uploader.UploadParams{})
+	//log.Println(resp.SecureURL)
+
+	return resp
 }
 
 func (repo *productQuery) Insert(input product.Core) error {

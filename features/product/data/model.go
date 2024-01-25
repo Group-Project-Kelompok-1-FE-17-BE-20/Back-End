@@ -14,7 +14,7 @@ func CoreToModel(input product.Core) database.Product {
 		Description: input.Description,
 		Tipe:        input.Tipe,
 		Gambar:      input.Gambar,
-		Brand:       input.Gambar,
+		Brand:       input.Brand,
 		Processor:   input.Processor,
 		Categories:  input.Categories,
 		Stock:       input.Stock,
