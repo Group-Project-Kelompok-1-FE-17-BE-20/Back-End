@@ -20,6 +20,7 @@ func main() {
 
 	//create a new echo instance
 	e := echo.New()
+
 	e.Use(middleware.CORS())
 	//remove pre trailingslash
 	e.Pre(middleware.RemoveTrailingSlash())

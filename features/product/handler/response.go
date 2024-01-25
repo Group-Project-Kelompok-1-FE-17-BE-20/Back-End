@@ -11,7 +11,7 @@ type ProductResponse struct {
 	Price       float64 `gorm:"type:decimal(10,2)" json:"price" form:"price"`
 	Description string  `gorm:"type:string" json:"description" form:"description"`
 	Tipe        string  `gorm:"type:string" json:"model" form:"model"`
-	Gambar      string  `gorm:"type:string" json:"gambar" form:"gambar" binding:"uri"`
+	Gambar      string  `gorm:"type:string" json:"image" form:"image"`
 	Brand       string  `gorm:"type:string" json:"brand" form:"brand"`
 	Processor   string  `gorm:"type:string" json:"processor" form:"processor"`
 	Categories  string  `gorm:"type:string" json:"categories" form:"categories"`

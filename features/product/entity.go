@@ -2,6 +2,9 @@ package product
 
 import (
 	"time"
+
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"github.com/labstack/echo/v4"
 )
 
 type Core struct {
@@ -12,7 +15,7 @@ type Core struct {
 	Price       float64   `gorm:"type:decimal(10,2)" json:"price" form:"price"`
 	Description string    `gorm:"type:string" json:"description" form:"description"`
 	Tipe        string    `gorm:"type:string" json:"model" form:"model"`
-	Gambar      string    `gorm:"type:string" json:"gambar" form:"gambar" binding:"uri"`
+	Gambar      string    `gorm:"type:string" json:"image" form:"image"`
 	Brand       string    `gorm:"type:string" json:"brand" form:"brand"`
 	Processor   string    `gorm:"type:string" json:"processor" form:"processor"`
 	Categories  string    `gorm:"type:string" json:"categories" form:"categories"`
@@ -24,6 +27,7 @@ type Core struct {
 // interface untuk Data Layer
 type ProductDataInterface interface {
 	GetStoreID(userID uint) (uint, error)
+	Photo(echo.Context) *uploader.UploadResult
 	Insert(input Core) error
 	Update(id int, input Core) error
 	SelectAll() ([]Core, error)
@@ -34,6 +38,7 @@ type ProductDataInterface interface {
 // interface untuk Service Layer
 type ProductServiceInterface interface {
 	GetStoreID(userID uint) (uint, error)
+	Photo(echo.Context) *uploader.UploadResult
 	Create(input Core) error
 	Update(id int, input Core) error
 	GetAll() ([]Core, error)

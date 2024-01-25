@@ -3,6 +3,9 @@ package service
 import (
 	"Laptop/features/product"
 	"errors"
+
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"github.com/labstack/echo/v4"
 )
 
 type productService struct {
@@ -20,6 +23,11 @@ func (service *productService) GetStoreID(input uint) (uint, error) {
 	// logic validation
 	res, err := service.productData.GetStoreID(input)
 	return res, err
+}
+
+func (service *productService) Photo(c echo.Context) *uploader.UploadResult {
+	res := service.productData.Photo(c)
+	return res
 }
 
 func (service *productService) Create(input product.Core) error {
