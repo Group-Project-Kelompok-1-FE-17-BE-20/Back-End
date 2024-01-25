@@ -8,7 +8,7 @@ import (
 
 type CoreUser struct {
 	gorm.Model
-	Id           uint
+	ID           uint
 	Username     string `json:"username" form:"username"`
 	NamaLengkap  string `json:"nama_lengkap" form:"nama_lengkap"`
 	Email        string `json:"email" form:"email" validate:"required" gorm:"unique"`
@@ -17,9 +17,9 @@ type CoreUser struct {
 	Alamat       string `json:"Alamat" form:"Alamat"`
 	JenisKelamin string `json:"JenisKelamin" form:"JenisKelamin"`
 	ImageProfil  string `json:"ImageProfil" form:"ImageProfil"`
-	NamaToko     string `json:"NamaToko" form:"NamaToko"`
-	AlamatToko   string `json:"AlamatToko" form:"AlamatToko"`
-	ImageToko    string `json:"ImageToko" form:"ImageToko"`
+	// NamaToko     string `json:"NamaToko" form:"NamaToko"`
+	// AlamatToko   string `json:"AlamatToko" form:"AlamatToko"`
+	// ImageToko    string `json:"ImageToko" form:"ImageToko"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

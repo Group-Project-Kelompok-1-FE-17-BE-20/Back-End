@@ -3,6 +3,7 @@ package handler
 import (
 	"Laptop/app/middlewares"
 	user "Laptop/features/user"
+
 	"Laptop/utils/responses"
 	"net/http"
 	"strings"
@@ -83,6 +84,7 @@ func (h *UserHandler) GetUserById(c echo.Context) error {
 	}
 
 	resultResponse := UserResponse{
+		ID:           result.ID,
 		Username:     result.Username,
 		Name:         result.NamaLengkap,
 		Email:        result.Email,
@@ -129,25 +131,18 @@ func (h *UserHandler) DeleteUserById(c echo.Context) error {
 
 // toko atribut
 
-func (h *UserHandler) GetTokoById(c echo.Context) error {
-	// Mengambil ID pengguna dari token JWT yang terkait dengan permintaan
-	userID := middlewares.ExtractTokenUserId(c)
+// func (handler *ProductHandler) GetSingleProduct(c echo.Context) error {
+// 	productID := c.Param("product_id")
 
-	// Memeriksa apakah ID pengguna yang diambil dari token sama dengan ID yang diminta
-	result, err := h.userService.GetById(uint(userID))
-	if err != nil {
-		if strings.Contains(err.Error(), "validation") {
-			return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, err.Error(), nil))
-		} else {
-			return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
-		}
-	}
+// 	productID_int, errConv := strconv.Atoi(productID)
+// 	if errConv != nil {
+// 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error convert id param", nil))
+// 	}
 
-	resultResponse1 := UserResponse{
-		NamaToko:   result.NamaToko,
-		AlamatToko: result.AlamatToko,
-		ImageToko:  result.ImageToko,
-		CreatedAt:  result.CreatedAt,
-	}
-	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusFound, "success read data", resultResponse1))
-}
+// 	result, errFirst := handler.productService.GetSingle(productID_int)
+// 	if errFirst != nil {
+// 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data. "+errFirst.Error(), nil))
+// 	}
+
+// 	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success read data.", result))
+// }

@@ -46,7 +46,7 @@ func (r *StoreQuery) SelectAll(userID uint) ([]store.CoreStore, error) {
 	return coreProjectSlice, nil
 }
 
-// Select implements task.TaskDataInterface.
+// // Select implements task.TaskDataInterface.
 func (r *StoreQuery) Select(StoreID uint, userID uint) (store.CoreStore, error) {
 	var storeData database.Store
 	tx := r.db.Where("id = ? AND user_id = ?", StoreID, userID).First(&storeData)
@@ -64,6 +64,17 @@ func (r *StoreQuery) Select(StoreID uint, userID uint) (store.CoreStore, error) 
 	coreProject := MapStoreToCoreStore(storeData)
 	return coreProject, nil
 }
+
+// func (r *StoreQuery) Select(userID uint) (store.CoreStore, error) {
+// 	var storeData database.Store
+// 	tx := r.db.Where("user_id = ?", userID).First(&storeData)
+// 	if tx.Error != nil {
+// 		return 0, tx.Error
+// 	}
+
+// 	storeID := storeData.ID
+// 	return storeID., nil
+// }
 
 // Update implements task.TaskDataInterface.
 func (r *StoreQuery) Update(StoreID uint, userID uint, storeData store.CoreStore) error {
