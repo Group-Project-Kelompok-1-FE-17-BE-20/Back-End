@@ -4,6 +4,7 @@ import (
 	"Laptop/app/middlewares"
 	"Laptop/features/store"
 	"Laptop/utils/responses"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -82,6 +83,12 @@ func (h *StoreHandler) UpdateStoreById(c echo.Context) error {
 	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data", nil))
 	}
+	responURL := h.StoreService.Photo(c)
+	log.Println(responURL.SecureURL)
+
+	newProduct := StoreRequest{}
+	newProduct.UserID = UserID
+	newProduct.ImageToko = responURL.SecureURL
 	//Mapping task reques to core task
 	Core := MapStoreReqToCoreStore(StoreInput)
 	err = h.StoreService.UpdateById(uint(idConv), UserID, Core)

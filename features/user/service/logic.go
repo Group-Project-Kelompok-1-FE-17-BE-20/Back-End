@@ -6,7 +6,9 @@ import (
 	"Laptop/utils/responses"
 	"errors"
 
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/go-playground/validator/v10"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )
 
@@ -95,4 +97,8 @@ func (s *UserService) DeleteById(userId uint) error {
 		return err
 	}
 	return nil
+}
+func (s *UserService) Photo(c echo.Context) *uploader.UploadResult {
+	res := s.userRepo.Photo(c)
+	return res
 }

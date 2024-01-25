@@ -2,6 +2,9 @@ package service
 
 import (
 	"Laptop/features/store"
+
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"github.com/labstack/echo/v4"
 	// "Laptop/controllers/user"
 )
 
@@ -58,4 +61,8 @@ func (s *StoreService) DeleteById(StoreID uint, userID uint) error {
 		return err
 	}
 	return nil
+}
+func (s *StoreService) Photo(c echo.Context) *uploader.UploadResult {
+	res := s.storeRepo.Photo(c)
+	return res
 }

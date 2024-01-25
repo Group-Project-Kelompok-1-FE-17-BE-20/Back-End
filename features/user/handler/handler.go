@@ -3,6 +3,7 @@ package handler
 import (
 	"Laptop/app/middlewares"
 	user "Laptop/features/user"
+	"log"
 
 	"Laptop/utils/responses"
 	"net/http"
@@ -104,6 +105,15 @@ func (h *UserHandler) UpdateUserById(c echo.Context) error {
 	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data", nil))
 	}
+	///-------
+	responURL := h.userService.Photo(c)
+	log.Println(responURL.SecureURL)
+
+	newProduct := UserRequest{}
+	newProduct.ID = userID
+	newProduct.ImageProfil = responURL.SecureURL
+
+	///-------------------------------
 	//Mapping user reques to core user
 	Core := MapReqToCoreUser(userInput)
 	err := h.userService.UpdateById(uint(userID), Core)

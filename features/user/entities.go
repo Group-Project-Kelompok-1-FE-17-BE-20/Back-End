@@ -3,6 +3,8 @@ package user
 import (
 	"time"
 
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
 
@@ -33,6 +35,7 @@ type UserDataInterface interface {
 	Select(userId uint) (CoreUser, error)
 	Update(userId uint, userData CoreUser) error
 	Delete(userId uint) error
+	Photo(echo.Context) *uploader.UploadResult
 }
 
 type UserServiceInterface interface {
@@ -42,4 +45,5 @@ type UserServiceInterface interface {
 	GetById(userId uint) (CoreUser, error)
 	UpdateById(userId uint, userData CoreUser) error
 	DeleteById(userId uint) error
+	Photo(echo.Context) *uploader.UploadResult
 }
