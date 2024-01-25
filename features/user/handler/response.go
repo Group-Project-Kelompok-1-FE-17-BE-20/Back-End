@@ -30,7 +30,7 @@ type UserResponse struct {
 // mapping from userCore to UserResponse
 func MapCoreUserToRes(Core user.CoreUser) UserResponse {
 	return UserResponse{
-		Id:           Core.ID,
+		Id:           Core.Id,
 		Username:     Core.Username,
 		Name:         Core.NamaLengkap,
 		Email:        Core.Email,
@@ -49,7 +49,7 @@ func MapCoreUserToRes(Core user.CoreUser) UserResponse {
 // mapping from userCore to LoginResponse
 func MapCoreUserToLogRes(Core user.CoreUser, jwtToken string) LoginResponse {
 	return LoginResponse{
-		Id:    Core.ID,
+		Id:    Core.Id,
 		Email: Core.Email,
 		Token: jwtToken,
 	}
