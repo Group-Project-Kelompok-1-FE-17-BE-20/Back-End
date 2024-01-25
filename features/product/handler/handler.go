@@ -4,6 +4,7 @@ import (
 	"Laptop/app/middlewares"
 	"Laptop/features/product"
 	"Laptop/utils/responses"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -29,9 +30,12 @@ func (handler *ProductHandler) CreateProduct(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
 	}
 
-	newProduct := ProductRequest{}
+	responURL := handler.productService.Photo(c)
+	log.Println(responURL.SecureURL)
 
+	newProduct := ProductRequest{}
 	newProduct.StoreID = result
+	newProduct.Gambar = responURL.SecureURL
 
 	errBind := c.Bind(&newProduct)
 	if errBind != nil {
