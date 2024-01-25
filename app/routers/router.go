@@ -59,14 +59,14 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	// user
 	e.POST("/login", userHandlerAPI.Login)
 	e.POST("/users", userHandlerAPI.CreateUser)
-	e.GET("/users", userHandlerAPI.GetAllUser)
+	//e.GET("/users", userHandlerAPI.GetAllUser)
 	e.GET("/users/:user_id", userHandlerAPI.GetUserById, middlewares.JWTMiddleware())
 	e.PUT("/users/:user_id", userHandlerAPI.UpdateUserById, middlewares.JWTMiddleware())
 	e.DELETE("/users/:user_id", userHandlerAPI.DeleteUserById, middlewares.JWTMiddleware())
 
 	// store
-	// e.GET("/stores", StoreHandler.GetAllStore,middlewares.JWTMiddleware())
-	e.GET("/stores/:store_id", StoreHandler.GetStoreById, middlewares.JWTMiddleware())
+	e.GET("/stores", StoreHandler.GetAllStore, middlewares.JWTMiddleware())
+	// e.GET("/stores/:store_id", StoreHandler.GetStoreById, middlewares.JWTMiddleware()) // error
 	e.POST("/stores", StoreHandler.CreateStore, middlewares.JWTMiddleware())
 	e.PUT("/stores/:store_id", StoreHandler.UpdateStoreById, middlewares.JWTMiddleware())
 	e.DELETE("/stores/:store_id", StoreHandler.DeleteStoreById, middlewares.JWTMiddleware())
@@ -89,6 +89,6 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 
 	// admin
 	e.POST("/logins", adminHandlerAPI.Login)
-	// e.GET("/users", adminHandlerAPI.GetAllUser)
+	e.GET("/users", adminHandlerAPI.GetAllUser)
 	e.GET("/userss", userHandlerAPI.GetAllUser)
 }
