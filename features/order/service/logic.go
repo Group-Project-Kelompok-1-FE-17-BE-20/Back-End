@@ -3,6 +3,7 @@ package service
 import (
 	"Laptop/features/order"
 	"Laptop/features/shoppingcartitem"
+	"database/sql"
 )
 
 type orderService struct {
@@ -32,4 +33,9 @@ func (service *orderService) GetAllCartItem(input uint) ([]shoppingcartitem.Core
 func (service *orderService) Create(input order.Core) error {
 	err := service.orderData.Insert(input)
 	return err
+}
+
+func (service *orderService) DetailOrder(input *sql.DB) ([]order.DetailOrder, error) {
+	result, err := service.orderData.DetailOrder(input)
+	return result, err
 }

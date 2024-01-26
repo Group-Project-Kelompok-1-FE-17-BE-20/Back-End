@@ -4,6 +4,8 @@ import (
 	"Laptop/app/database"
 	"Laptop/features/order"
 	"Laptop/features/shoppingcartitem"
+	"database/sql"
+	"log"
 
 	"gorm.io/gorm"
 )
@@ -52,4 +54,34 @@ func (repo *orderQuery) Insert(input order.Core) error {
 	}
 
 	return nil
+}
+
+func (repo *orderQuery) DetailOrder(db *sql.DB) ([]order.DetailOrder, error) {
+	// *** read / select data all_accounts *** //
+	var itemsOrdered []order.DetailOrder
+
+	orderID := 1
+
+	query := "SELECT order_items.order_id, order_items.productid, products.brand, products.ram, products.storage, " +
+		"order_items.jumlah, order_items.total_amount " +
+		"FROM shopping_carts " +
+		"JOIN orders ON shopping_carts.id = orders.shopping_cart_id " +
+		"JOIN order_items ON orders.id = order_items.order_id " +
+		"JOIN products ON order_items.productid = products.id WHERE order_items.order_id = ?;"
+
+	rows, errSelect := db.Query(query, orderID)
+	if errSelect != nil {
+		log.Fatal("cannot run select query: ", errSelect)
+	}
+
+	for rows.Next() {
+		var Row_item order.DetailOrder
+		errScan := rows.Scan(&Row_item.OrderID, &Row_item.Productid, &Row_item.Brand, &Row_item.RAM, &Row_item.Storage, &Row_item.Jumlah, &Row_item.TotalAmount)
+		if errScan != nil {
+			log.Fatal("cannot run scan query: ", errScan.Error())
+		}
+		itemsOrdered = append(itemsOrdered, Row_item)
+	}
+
+	return itemsOrdered, nil
 }
