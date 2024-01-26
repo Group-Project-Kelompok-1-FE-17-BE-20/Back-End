@@ -2,7 +2,9 @@ package database
 
 import (
 	config "Laptop/app/configs"
+	"database/sql"
 	"fmt"
+	"log"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -29,5 +31,16 @@ func InitDBMysql(cfg *config.AppConfig) *gorm.DB {
 	}
 
 	return DB
+}
 
+func InitRawSql(cfg *config.AppConfig) *sql.DB {
+	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", cfg.DB_USERNAME, cfg.DB_PASSWORD, cfg.DB_HOSTNAME, cfg.DB_PORT, cfg.DB_NAME)
+
+	// Membuka koneksi ke database
+	db, err := sql.Open("mysql", connectionString)
+	if err != nil {
+		log.Fatal("Gagal terhubung ke database:", err)
+	}
+
+	return db
 }

@@ -1,6 +1,8 @@
 package handler
 
 import (
+	config "Laptop/app/configs"
+	"Laptop/app/database"
 	"Laptop/app/middlewares"
 	"Laptop/features/order"
 	"Laptop/utils/responses"
@@ -53,4 +55,17 @@ func (handler *OrderHandler) CreateOrder(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success insert data", orderCore))
+}
+
+func (handler *OrderHandler) GetDetailOrder(c echo.Context) error {
+	// Membuka koneksi ke database
+	cfg := config.InitConfig()
+	dbRaw := database.InitRawSql(cfg)
+
+	result, err := handler.orderService.DetailOrder(dbRaw)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error get data"+err.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success insert data", result))
 }
