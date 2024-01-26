@@ -23,6 +23,10 @@ import (
 	_ItemHandler "Laptop/features/shoppingcartitem/handler"
 	_ItemService "Laptop/features/shoppingcartitem/service"
 
+	_OrderData "Laptop/features/order/data"
+	_OrderHandler "Laptop/features/order/handler"
+	_OrderService "Laptop/features/order/service"
+
 	_adminRepo "Laptop/features/admin/data"
 	_adminHandler "Laptop/features/admin/handler"
 	_adminService "Laptop/features/admin/service"
@@ -51,6 +55,10 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	itemData := _ItemData.New(db)
 	itemService := _ItemService.New(itemData)
 	itemHandlerAPI := _ItemHandler.New(itemService)
+
+	orderData := _OrderData.New(db)
+	orderService := _OrderService.New(orderData)
+	orderHandlerAPI := _OrderHandler.New(orderService)
 
 	adminRepo := _adminRepo.New(db)
 	adminService := _adminService.New(adminRepo)
@@ -86,6 +94,9 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.POST("/shopping-cart", itemHandlerAPI.CreateItem, middlewares.JWTMiddleware())
 	e.PUT("/shopping-cart", itemHandlerAPI.UpdateItem, middlewares.JWTMiddleware())
 	e.DELETE("/shopping-cart", itemHandlerAPI.DeleteItem, middlewares.JWTMiddleware())
+
+	// order
+	e.POST("/orders", orderHandlerAPI.CreateOrder, middlewares.JWTMiddleware())
 
 	// admin
 	e.POST("/logins", adminHandlerAPI.Login)
