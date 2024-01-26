@@ -8,8 +8,8 @@
 https://app.swaggerhub.com/apis/Firlydani/Laptop/1.0.0#/
 
 ### Autentikasi, User
-<img width="272" alt="auth" src="https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/55623766/584f1ce4-dd8f-4dd8-becc-c43592de1e59">
 <img width="230" alt="user" src="https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/52233444/49a2e837-4762-4a64-834d-1f9ef546bd20">
+<img width="272" alt="auth" src="https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/55623766/584f1ce4-dd8f-4dd8-becc-c43592de1e59">
 
 ### Product
 <img width="272" alt="product" src="https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/52233444/d5528b18-d4dd-477c-93bd-69691b8054db">
