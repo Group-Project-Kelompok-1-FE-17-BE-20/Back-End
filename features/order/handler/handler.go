@@ -62,10 +62,55 @@ func (handler *OrderHandler) GetDetailOrder(c echo.Context) error {
 	cfg := config.InitConfig()
 	dbRaw := database.InitRawSql(cfg)
 
-	result, err := handler.orderService.DetailOrder(dbRaw)
+	userID := middlewares.ExtractTokenUserId(c)
+
+	result, _, err := handler.orderService.DetailOrder(dbRaw, uint(userID))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error get data"+err.Error(), nil))
 	}
 
-	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success insert data", result))
+	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success read data", result))
+}
+
+func (handler *OrderHandler) CancelOrder(c echo.Context) error {
+	history := HistoryRequest{}
+	// Membuka koneksi ke database
+	cfg := config.InitConfig()
+	dbRaw := database.InitRawSql(cfg)
+
+	userID := middlewares.ExtractTokenUserId(c)
+	_, resID, err := handler.orderService.DetailOrder(dbRaw, uint(userID))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error get data"+err.Error(), nil))
+	}
+
+	date, err := handler.orderService.DateOrder(dbRaw, uint(userID))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error get data"+err.Error(), nil))
+	}
+
+	cartID, err := handler.orderService.GetCartID(userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
+	}
+
+	history.OrderID = resID
+	history.ShoppingCartID = cartID
+	history.TglOrder = date
+	history.TotalBayar = 0.0
+	history.StatusOrder = "Cancel"
+
+	historyCore := HistoryToCore(history)
+
+	errDel := handler.orderService.Cancel(dbRaw, resID)
+	if errDel != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error cancel data. "+errDel.Error(), nil))
+	}
+
+	errCreate := handler.orderService.CreateHistory(historyCore)
+	if errCreate != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error insert data"+errCreate.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success cancel order", nil))
 }

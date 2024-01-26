@@ -1,6 +1,8 @@
 package database
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -45,9 +47,10 @@ type Product struct {
 
 type ShoppingCart struct {
 	gorm.Model
-	UserID uint   `gorm:"column:user_id"`
-	Status string `gorm:"type:string" json:"status" form:"status"`
-	Order  Order
+	UserID       uint   `gorm:"column:user_id"`
+	Status       string `gorm:"type:string" json:"status" form:"status"`
+	Order        Order
+	OrderHistory OrderHistory
 }
 
 type ShoppingCartItem struct {
@@ -65,6 +68,7 @@ type Order struct {
 	ShoppingCartID uint        `gorm:"not null" json:"cartId" form:"cartId"`
 	Item           []OrderItem `gorm:"foreignKey:OrderID"`
 	Status         string      `gorm:"not null" json:"status" form:"status"`
+	OrderHistory   OrderHistory
 }
 
 type OrderItem struct {
@@ -73,6 +77,15 @@ type OrderItem struct {
 	Productid   uint    `gorm:"not null" json:"prod_id" form:"prod_id"`
 	Jumlah      uint    `gorm:"not null" json:"jumlah" form:"jumlah"`
 	TotalAmount float64 `gorm:"not null" json:"totalAmount" form:"totalAmount"`
+}
+
+type OrderHistory struct {
+	gorm.Model
+	OrderID        uint      `gorm:"not null" json:"orderId" form:"orderId"`
+	ShoppingCartID uint      `gorm:"not null" json:"cartId" form:"cartId"`
+	TglOrder       time.Time `gorm:"not null" json:"date_order" form:"date_order"`
+	TotalBayar     float64   `gorm:"not null" json:"total" form:"total"`
+	StatusOrder    string    `gorm:"not null" json:"status_order" form:"status_order"`
 }
 
 type Admin struct {

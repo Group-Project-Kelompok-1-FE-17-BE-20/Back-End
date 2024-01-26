@@ -4,6 +4,7 @@ import (
 	"Laptop/features/order"
 	"Laptop/features/shoppingcartitem"
 	"database/sql"
+	"time"
 )
 
 type orderService struct {
@@ -35,7 +36,22 @@ func (service *orderService) Create(input order.Core) error {
 	return err
 }
 
-func (service *orderService) DetailOrder(input *sql.DB) ([]order.DetailOrder, error) {
-	result, err := service.orderData.DetailOrder(input)
+func (service *orderService) DetailOrder(input *sql.DB, userID uint) ([]order.DetailOrder, uint, error) {
+	result, id, err := service.orderData.DetailOrder(input, userID)
+	return result, id, err
+}
+
+func (service *orderService) DateOrder(input *sql.DB, order_id uint) (time.Time, error) {
+	result, err := service.orderData.DateOrder(input, order_id)
 	return result, err
+}
+
+func (service *orderService) CreateHistory(input order.CoreHistory) error {
+	err := service.orderData.CreateHistory(input)
+	return err
+}
+
+func (service *orderService) Cancel(db *sql.DB, order_id uint) error {
+	err := service.orderData.Cancel(db, order_id)
+	return err
 }

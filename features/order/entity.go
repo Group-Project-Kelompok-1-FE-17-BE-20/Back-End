@@ -31,12 +31,23 @@ type DetailOrder struct {
 	TotalAmount float64 `gorm:"not null" json:"totalAmount" form:"totalAmount"`
 }
 
+type CoreHistory struct {
+	OrderID        uint      `gorm:"not null" json:"orderId" form:"orderId"`
+	ShoppingCartID uint      `gorm:"not null" json:"cartId" form:"cartId"`
+	TglOrder       time.Time `gorm:"not null" json:"date_order" form:"date_order"`
+	TotalBayar     float64   `gorm:"not null" json:"total" form:"total"`
+	StatusOrder    string    `gorm:"not null" json:"status_order" form:"status_order"`
+}
+
 // interface untuk Data Layer
 type OrderDataInterface interface {
 	GetCartID(userID uint) (uint, error)
 	GetAllCartItem(cartID uint) ([]shoppingcartitem.Core, error)
 	Insert(input Core) error
-	DetailOrder(db *sql.DB) ([]DetailOrder, error)
+	DetailOrder(db *sql.DB, userID uint) ([]DetailOrder, uint, error)
+	DateOrder(db *sql.DB, orderID uint) (time.Time, error)
+	CreateHistory(CoreHistory) error
+	Cancel(db *sql.DB, orderID uint) error
 }
 
 // interface untuk Service Layer
@@ -44,5 +55,8 @@ type OrderServiceInterface interface {
 	GetCartID(userID uint) (uint, error)
 	GetAllCartItem(cartID uint) ([]shoppingcartitem.Core, error)
 	Create(input Core) error
-	DetailOrder(db *sql.DB) ([]DetailOrder, error)
+	DetailOrder(db *sql.DB, userID uint) ([]DetailOrder, uint, error)
+	DateOrder(db *sql.DB, orderID uint) (time.Time, error)
+	CreateHistory(CoreHistory) error
+	Cancel(db *sql.DB, orderID uint) error
 }

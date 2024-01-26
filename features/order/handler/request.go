@@ -3,6 +3,7 @@ package handler
 import (
 	"Laptop/features/order"
 	"Laptop/features/shoppingcartitem"
+	"time"
 )
 
 type OrderRequest struct {
@@ -15,6 +16,14 @@ type OrderItemRequest struct {
 	Productid   uint    `gorm:"not null" json:"prod_id" form:"prod_id"`
 	Jumlah      uint    `gorm:"not null" json:"jumlah" form:"jumlah"`
 	TotalAmount float64 `gorm:"not null" json:"totalAmount" form:"totalAmount"`
+}
+
+type HistoryRequest struct {
+	OrderID        uint      `gorm:"not null" json:"orderId" form:"orderId"`
+	ShoppingCartID uint      `gorm:"not null" json:"cartId" form:"cartId"`
+	TglOrder       time.Time `gorm:"not null" json:"date_order" form:"date_order"`
+	TotalBayar     float64   `gorm:"not null" json:"total" form:"total"`
+	StatusOrder    string    `gorm:"not null" json:"status_order" form:"status_order"`
 }
 
 func ResGetRequest(data []shoppingcartitem.Core) []OrderItemRequest {
@@ -49,5 +58,15 @@ func RequestToCore(input OrderRequest) order.Core {
 		ShoppingCartID: input.ShoppingCartID,
 		Item:           inputCoreItem,
 		Status:         input.Status,
+	}
+}
+
+func HistoryToCore(input HistoryRequest) order.CoreHistory {
+	return order.CoreHistory{
+		OrderID:        input.OrderID,
+		ShoppingCartID: input.ShoppingCartID,
+		TglOrder:       input.TglOrder,
+		TotalBayar:     input.TotalBayar,
+		StatusOrder:    input.StatusOrder,
 	}
 }
