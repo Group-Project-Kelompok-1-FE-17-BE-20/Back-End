@@ -3,8 +3,12 @@ package data
 import (
 	"Laptop/app/database"
 	store "Laptop/features/store"
+	"context"
 	"errors"
 
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
 
@@ -109,4 +113,22 @@ func (r *StoreQuery) Delete(StoreID uint, userID uint) error {
 		return errors.New("project not found")
 	}
 	return nil
+}
+
+func (r *StoreQuery) Photo(c echo.Context) *uploader.UploadResult {
+	urlCloudinary := "cloudinary://979172954987629:PNgbXcjMn-VOd1AyTlN0yBSvnWU@dv3nso14b"
+	fileHeader, _ := c.FormFile("ImageProfil")
+
+	var store database.Store
+	_ = c.Bind(&store)
+
+	file, _ := fileHeader.Open()
+	//log.Println(fileHeader.Filename)
+
+	ctx := context.Background()
+	cldService, _ := cloudinary.NewFromURL(urlCloudinary)
+	resp, _ := cldService.Upload.Upload(ctx, file, uploader.UploadParams{})
+	//log.Println(resp.SecureURL)
+
+	return resp
 }

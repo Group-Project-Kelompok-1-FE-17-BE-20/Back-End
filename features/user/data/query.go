@@ -4,8 +4,12 @@ import (
 	"Laptop/app/database"
 	"Laptop/features/user"
 	"Laptop/utils/responses"
+	"context"
 	"errors"
 
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"gorm.io/gorm"
 )
@@ -118,4 +122,23 @@ func (r *userQuery) Delete(userId uint) error {
 		return errors.New("data not found")
 	}
 	return nil
+}
+
+// /-----------------------------
+func (r *userQuery) Photo(c echo.Context) *uploader.UploadResult {
+	urlCloudinary := "cloudinary://979172954987629:PNgbXcjMn-VOd1AyTlN0yBSvnWU@dv3nso14b"
+	fileHeader, _ := c.FormFile("ImageProfil")
+
+	var user database.User
+	_ = c.Bind(&user)
+
+	file, _ := fileHeader.Open()
+	//log.Println(fileHeader.Filename)
+
+	ctx := context.Background()
+	cldService, _ := cloudinary.NewFromURL(urlCloudinary)
+	resp, _ := cldService.Upload.Upload(ctx, file, uploader.UploadParams{})
+	//log.Println(resp.SecureURL)
+
+	return resp
 }

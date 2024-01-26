@@ -1,6 +1,11 @@
 package store
 
-import "time"
+import (
+	"time"
+
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"github.com/labstack/echo/v4"
+)
 
 type CoreStore struct {
 	ID         uint
@@ -18,6 +23,7 @@ type StoreDataInterface interface {
 	Select(StoreID uint, userID uint) (CoreStore, error)
 	Update(StoreID uint, userID uint, storeData CoreStore) error
 	Delete(StoreID, userID uint) error
+	Photo(echo.Context) *uploader.UploadResult
 }
 
 type StoreServiceInterface interface {
@@ -26,4 +32,5 @@ type StoreServiceInterface interface {
 	GetById(StoreID uint, userID uint) (CoreStore, error)
 	UpdateById(StoreID uint, userID uint, storeData CoreStore) error
 	DeleteById(StoreID uint, userID uint) error
+	Photo(echo.Context) *uploader.UploadResult
 }
