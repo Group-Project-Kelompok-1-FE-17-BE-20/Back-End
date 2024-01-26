@@ -127,7 +127,7 @@ func (r *userQuery) Delete(userId uint) error {
 // /-----------------------------
 func (r *userQuery) Photo(c echo.Context) *uploader.UploadResult {
 	urlCloudinary := "cloudinary://979172954987629:PNgbXcjMn-VOd1AyTlN0yBSvnWU@dv3nso14b"
-	fileHeader, _ := c.FormFile("ImageProfil")
+	fileHeader, _ := c.FormFile("image_profil")
 
 	var user database.User
 	_ = c.Bind(&user)
