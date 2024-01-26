@@ -10,20 +10,20 @@ type User struct {
 	NamaLengkap  string `gorm:"not null" json:"nama_lengkap" form:"nama_lengkap"`
 	Email        string `gorm:"not null;unique" json:"email" form:"email"`
 	Password     string `gorm:"not null" json:"password" form:"password"`
-	NomorHP      string `json:"nomor_hp" form:"nomor_hp"`
-	Alamat       string `json:"alamat" form:"alamat"`
-	JenisKelamin string `json:"jenis_kelamin" form:"jenis_kelamin"`
-	ImageProfil  string `json:"image_profil" form:"image_profil"`
+	NomorHP      string `gorm:"type:string"json:"nomor_hp" form:"nomor_hp"`
+	Alamat       string `gorm:"type:string"json:"alamat" form:"alamat"`
+	JenisKelamin string `gorm:"type:string"json:"jenis_kelamin" form:"jenis_kelamin"`
+	ImageProfil  string `gorm:"type:string"json:"image_profil" form:"image_profil" binding:"uri"`
 	Store        Store
 	ShoppingCart ShoppingCart
 }
 
 type Store struct {
 	gorm.Model
-	UserID     uint   `gorm:"not null" json:"user_id" form:"user_id"`
-	NamaToko   string `gorm:"not null" json:"nama_toko" form:"nama_toko"`
-	AlamatToko string `gorm:"not null" json:"alamat_toko" form:"alamat_toko"`
-	ImageToko  string `json:"image_toko" form:"image_toko"`
+	UserID     uint   `gorm:"type:string"json:"user_id" form:"user_id"`
+	NamaToko   string `gorm:"type:string" json:"nama_toko" form:"nama_toko"`
+	AlamatToko string `gorm:"type:string" json:"alamat_toko" form:"alamat_toko"`
+	ImageToko  string `gorm:"type:string"json:"image_toko" form:"image_toko" binding:"uri"`
 }
 
 type Product struct {

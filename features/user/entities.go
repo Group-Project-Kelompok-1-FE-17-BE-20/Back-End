@@ -18,7 +18,7 @@ type CoreUser struct {
 	NomorHP      string `json:"NomorHP" form:"NomorHP"`
 	Alamat       string `json:"Alamat" form:"Alamat"`
 	JenisKelamin string `json:"JenisKelamin" form:"JenisKelamin"`
-	ImageProfil  string `json:"ImageProfil" form:"ImageProfil"`
+	ImageProfil  string `json:"image_profil" form:"image_profil"`
 	// NamaToko     string `json:"NamaToko" form:"NamaToko"`
 	// AlamatToko   string `json:"AlamatToko" form:"AlamatToko"`
 	// ImageToko    string `json:"ImageToko" form:"ImageToko"`

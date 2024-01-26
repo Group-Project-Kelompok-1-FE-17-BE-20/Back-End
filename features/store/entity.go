@@ -8,11 +8,11 @@ import (
 )
 
 type CoreStore struct {
-	ID         uint
-	UserID     uint
-	NamaToko   string
-	AlamatToko string
-	ImageToko  string
+	ID         uint   `json:"id" form:"id"`
+	UserID     uint   `gorm:"not null" json:"user_id" form:"user_id"`
+	NamaToko   string `gorm:"type:string" json:"nama_toko" form:"nama_toko"`
+	AlamatToko string `gorm:"type:string" json:"alamat_toko" form:"alamat_toko"`
+	ImageToko  string `gorm:"type:string" json:"image_toko" form:"image_toko"`
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	DeletedAt  time.Time

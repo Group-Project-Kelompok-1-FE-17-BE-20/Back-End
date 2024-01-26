@@ -8,8 +8,8 @@ import (
 type StoreResponse struct {
 	UserID     uint
 	NamaToko   string    `json:"nama_toko" `
-	AlamatToko string    `json:"alamat_toko" `
-	ImageToko  string    `json:"image_toko"`
+	AlamatToko string    `gorm:"type:string"json:"alamat_toko" `
+	ImageToko  string    `gorm:"type:string"json:"image_toko"`
 	CreatedAt  time.Time `json:"created_at"`
 }
 

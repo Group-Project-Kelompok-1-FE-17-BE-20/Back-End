@@ -109,9 +109,9 @@ func (h *UserHandler) UpdateUserById(c echo.Context) error {
 	responURL := h.userService.Photo(c)
 	log.Println(responURL.SecureURL)
 
-	newProduct := UserRequest{}
-	newProduct.ID = userID
-	newProduct.ImageProfil = responURL.SecureURL
+	//newProduct := UserRequest{}
+	userInput.ID = userID
+	userInput.ImageProfil = responURL.SecureURL
 
 	///-------------------------------
 	//Mapping user reques to core user

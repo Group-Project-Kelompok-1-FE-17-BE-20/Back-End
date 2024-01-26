@@ -54,7 +54,7 @@ func (h *StoreHandler) GetAllStore(c echo.Context) error {
 }
 
 func (h *StoreHandler) GetStoreById(c echo.Context) error {
-	idParam := c.Param("store_id")
+	idParam := c.Param("user_id")
 	idConv, err := strconv.Atoi(idParam)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "user id is not valid", nil))
@@ -86,9 +86,9 @@ func (h *StoreHandler) UpdateStoreById(c echo.Context) error {
 	responURL := h.StoreService.Photo(c)
 	log.Println(responURL.SecureURL)
 
-	newProduct := StoreRequest{}
-	newProduct.UserID = UserID
-	newProduct.ImageToko = responURL.SecureURL
+	//StoreInput := StoreRequest{}
+	StoreInput.UserID = UserID
+	StoreInput.ImageToko = responURL.SecureURL
 	//Mapping task reques to core task
 	Core := MapStoreReqToCoreStore(StoreInput)
 	err = h.StoreService.UpdateById(uint(idConv), UserID, Core)
