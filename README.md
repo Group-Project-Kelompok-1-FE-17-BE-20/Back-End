@@ -7,6 +7,7 @@
 swagger 
 https://app.swaggerhub.com/apis/Firlydani/Laptop/1.0.0#/
 # ERD
+![db_laptop](https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/52233444/ce32b60a-69e8-400b-b2d1-61ec84a41d12)
 
 # USERS OPENAPI
 
