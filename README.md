@@ -2,7 +2,7 @@
 <img width="472" alt="ecom" src="https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/52233444/b7f0737a-ce7c-40a8-b94f-b0c9000ba85d">
 
 ## ERD
-![db_laptop](https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/52233444/ce32b60a-69e8-400b-b2d1-61ec84a41d12)
+![db_laptop](https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/55623766/b7189d65-4867-4f77-9dd1-4c3cf0e60404)
 
 ## OPENAPI Swaggerhub
 https://app.swaggerhub.com/apis/Firlydani/Laptop/1.0.0#/
