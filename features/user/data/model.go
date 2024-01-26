@@ -55,7 +55,7 @@ func ListMapUserToCoreUser(users []database.User) []user.CoreUser {
 
 	for i, users := range users {
 		coreUser := &user.CoreUser{
-			//	ID:           users.ID,
+			ID:           users.ID,
 			Username:     users.Username,
 			NamaLengkap:  users.NamaLengkap,
 			Email:        users.Email,
