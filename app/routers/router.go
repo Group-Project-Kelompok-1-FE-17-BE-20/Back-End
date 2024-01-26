@@ -98,6 +98,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	// order
 	e.POST("/orders", orderHandlerAPI.CreateOrder, middlewares.JWTMiddleware())
 	e.GET("/orders", orderHandlerAPI.GetDetailOrder, middlewares.JWTMiddleware())
+	e.DELETE("/orders-cancel", orderHandlerAPI.CancelOrder, middlewares.JWTMiddleware())
 
 	// admin
 	e.POST("/logins", adminHandlerAPI.Login)

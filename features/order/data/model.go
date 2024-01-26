@@ -56,6 +56,16 @@ func CoreToModel(input order.Core) database.Order {
 	}
 }
 
+func HistoryToModel(input order.CoreHistory) database.OrderHistory {
+	return database.OrderHistory{
+		OrderID:        input.OrderID,
+		ShoppingCartID: input.ShoppingCartID,
+		TglOrder:       input.TglOrder,
+		TotalBayar:     input.TotalBayar,
+		StatusOrder:    input.StatusOrder,
+	}
+}
+
 // func CoretoModelGorm(data []order.Core) []database.Order {
 // 	var orderDataGorm []database.Order
 // 	for _, input := range data {

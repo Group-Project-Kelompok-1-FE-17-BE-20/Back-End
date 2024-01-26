@@ -5,7 +5,9 @@ import (
 	"Laptop/features/order"
 	"Laptop/features/shoppingcartitem"
 	"database/sql"
+	"fmt"
 	"log"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -56,20 +58,19 @@ func (repo *orderQuery) Insert(input order.Core) error {
 	return nil
 }
 
-func (repo *orderQuery) DetailOrder(db *sql.DB) ([]order.DetailOrder, error) {
+func (repo *orderQuery) DetailOrder(db *sql.DB, userID uint) ([]order.DetailOrder, uint, error) {
 	// *** read / select data all_accounts *** //
 	var itemsOrdered []order.DetailOrder
-
-	orderID := 1
+	var order_id uint
 
 	query := "SELECT order_items.order_id, order_items.productid, products.brand, products.ram, products.storage, " +
 		"order_items.jumlah, order_items.total_amount " +
 		"FROM shopping_carts " +
 		"JOIN orders ON shopping_carts.id = orders.shopping_cart_id " +
 		"JOIN order_items ON orders.id = order_items.order_id " +
-		"JOIN products ON order_items.productid = products.id WHERE order_items.order_id = ?;"
+		"JOIN products ON order_items.productid = products.id WHERE shopping_carts.user_id = ?;"
 
-	rows, errSelect := db.Query(query, orderID)
+	rows, errSelect := db.Query(query, userID)
 	if errSelect != nil {
 		log.Fatal("cannot run select query: ", errSelect)
 	}
@@ -81,7 +82,58 @@ func (repo *orderQuery) DetailOrder(db *sql.DB) ([]order.DetailOrder, error) {
 			log.Fatal("cannot run scan query: ", errScan.Error())
 		}
 		itemsOrdered = append(itemsOrdered, Row_item)
+		order_id = Row_item.OrderID
 	}
 
-	return itemsOrdered, nil
+	return itemsOrdered, order_id, nil
+}
+
+func (repo *orderQuery) DateOrder(db *sql.DB, order_id uint) (time.Time, error) {
+	var dateOrder time.Time
+	rowID := db.QueryRow("select created_at from orders where id = ?", order_id)
+	if err := rowID.Scan(&dateOrder); err != nil {
+		//
+	}
+
+	return dateOrder, nil
+}
+
+// Insert implements order.OrderDataInterface.
+func (repo *orderQuery) CreateHistory(input order.CoreHistory) error {
+	newHistory := HistoryToModel(input)
+
+	tx := repo.db.Create(&newHistory) // proses query insert
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	return nil
+}
+
+func (repo *orderQuery) Cancel(db *sql.DB, order_id uint) error {
+	// result1, errExec := db.Exec("delete from order_items where id = ?", order_id)
+	// if errExec != nil {
+	// 	log.Fatal("cannot cancel data: ", errExec)
+	// }
+
+	// hasilRow1, errRow1 := result1.RowsAffected()
+	// if errRow1 != nil {
+	// 	log.Fatal("errRow: ", errRow1)
+	// } else {
+	// 	fmt.Println("berhasil cancel. Row affected ID:", hasilRow1)
+	// }
+
+	result2, errExec := db.Exec("delete from orders where id = ?", order_id)
+	if errExec != nil {
+		log.Fatal("cannot cancel data: ", errExec)
+	}
+
+	hasilRow2, errRow2 := result2.RowsAffected()
+	if errRow2 != nil {
+		log.Fatal("errRow: ", errRow2)
+	} else {
+		fmt.Println("berhasil cancel. Row affected ID:", hasilRow2)
+	}
+
+	return nil
 }
