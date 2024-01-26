@@ -10,7 +10,7 @@ type User struct {
 	NamaLengkap  string `gorm:"not null" json:"nama_lengkap" form:"nama_lengkap"`
 	Email        string `gorm:"not null;unique" json:"email" form:"email"`
 	Password     string `gorm:"not null" json:"password" form:"password"`
-	NomorHP      string `json:"NomorHP" form:"NomorHP"`
+	NomorHP      string `json:"nomor_hp" form:"nomor_hp"`
 	Alamat       string `json:"alamat" form:"alamat"`
 	JenisKelamin string `json:"jenis_kelamin" form:"jenis_kelamin"`
 	ImageProfil  string `json:"image_profil" form:"image_profil"`
@@ -34,7 +34,7 @@ type Product struct {
 	Price            float64 `gorm:"type:decimal(10,2)" json:"price" form:"price"`
 	Description      string  `gorm:"type:string" json:"description" form:"description"`
 	Tipe             string  `gorm:"type:string" json:"model" form:"model"`
-	Gambar           string  `json:"image" form:"image"`
+	Gambar           string  `gorm:"type:string" json:"gambar" form:"gambar" binding:"uri"`
 	Brand            string  `gorm:"type:string" json:"brand" form:"brand"`
 	Processor        string  `gorm:"type:string" json:"processor" form:"processor"`
 	Categories       string  `gorm:"type:string" json:"categories" form:"categories"`
@@ -47,6 +47,7 @@ type ShoppingCart struct {
 	gorm.Model
 	UserID uint   `gorm:"column:user_id"`
 	Status string `gorm:"type:string" json:"status" form:"status"`
+	Order  Order
 }
 
 type ShoppingCartItem struct {
@@ -57,6 +58,21 @@ type ShoppingCartItem struct {
 	UnitPrice      float64 `gorm:"not null" json:"unitPrice" form:"unitPrice"`
 	TotalPrice     float64 `gorm:"not null" json:"totalPrice" form:"totalPrice"`
 	ShoppingCart   ShoppingCart
+}
+
+type Order struct {
+	gorm.Model
+	ShoppingCartID uint        `gorm:"not null" json:"cartId" form:"cartId"`
+	Item           []OrderItem `gorm:"foreignKey:OrderID"`
+	Status         string      `gorm:"not null" json:"status" form:"status"`
+}
+
+type OrderItem struct {
+	gorm.Model
+	OrderID     uint    `gorm:"not null" json:"orderId" form:"orderId"`
+	Productid   uint    `gorm:"not null" json:"prod_id" form:"prod_id"`
+	Jumlah      uint    `gorm:"not null" json:"jumlah" form:"jumlah"`
+	TotalAmount float64 `gorm:"not null" json:"totalAmount" form:"totalAmount"`
 }
 
 type Admin struct {
