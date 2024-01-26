@@ -15,8 +15,9 @@ https://app.swaggerhub.com/apis/Firlydani/Laptop/1.0.0#/
 <img width="272" alt="product" src="https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/52233444/d5528b18-d4dd-477c-93bd-69691b8054db">
 
 ### Cart, Order, Payment
-<img width="345" alt="order" src="https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/52233444/8a7f1899-a1dd-4215-b30e-090649013761">
+<img width="345" alt="order" src="https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/55623766/989d243e-4d47-4ec8-9f95-7c396b242d2b">
 <img width="289" alt="cart" src="https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/52233444/060eb349-c7af-44b5-98bd-2d4106867439">
+<img width="289" alt="payment" src="https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/55623766/8a5301f8-4f6f-4044-803b-f07a1874727f">
 
 ### Admin
 <img width="272" alt="admin" src="https://github.com/Group-Project-Kelompok-1-FE-17-BE-20/Back-End/assets/55623766/3118957b-62c9-4046-b59d-9784bc58b65a">
