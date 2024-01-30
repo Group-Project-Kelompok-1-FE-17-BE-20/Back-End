@@ -66,3 +66,9 @@ func (service *itemService) Delete(input shoppingcartitem.Core) error {
 	err := service.itemData.Delete(input)
 	return err
 }
+
+func (service *itemService) GetCartItem(input uint) (shoppingcartitem.Core, error) {
+	// logic validation
+	res, err := service.itemData.GetCartItem(input)
+	return res, err
+}

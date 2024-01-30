@@ -118,3 +118,15 @@ func (repo *itemQuery) Delete(input shoppingcartitem.Core) error {
 
 	return nil
 }
+
+func (repo *itemQuery) GetCartItem(item_id uint) (shoppingcartitem.Core, error) {
+	var singleCartItem database.ShoppingCartItem
+	tx := repo.db.Where("ID = ?", item_id).First(&singleCartItem)
+	if tx.Error != nil {
+		return shoppingcartitem.Core{}, tx.Error
+	}
+
+	cartItemCore := ModelToCore(singleCartItem)
+
+	return cartItemCore, nil
+}

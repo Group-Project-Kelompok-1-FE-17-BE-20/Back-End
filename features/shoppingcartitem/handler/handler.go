@@ -148,3 +148,20 @@ func (handler *ItemHandler) DeleteItem(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success deleting item", nil))
 }
+
+// update item
+func (handler *ItemHandler) GetItem(c echo.Context) error {
+	// mendapatkan productId
+	itemID := c.Param("item_id")
+	item_int, err := strconv.Atoi(itemID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error convert data, "+err.Error(), nil))
+	}
+
+	result, errRead := handler.itemService.GetCartItem(uint(item_int))
+	if errRead != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data. "+errRead.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success read item", result))
+}
