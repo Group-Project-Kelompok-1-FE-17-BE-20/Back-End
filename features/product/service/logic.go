@@ -65,3 +65,10 @@ func (service *productService) GetSingle(productID_int int) (product.Core, error
 	results, err := service.productData.GetSingleProduct(productID_int)
 	return results, err
 }
+
+func (service *productService) GetStoreProducts(store_id uint) ([]product.Core, error) {
+	// logic
+	// memanggil func yg ada di data layer
+	results, err := service.productData.GetStoreProducts(store_id)
+	return results, err
+}

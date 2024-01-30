@@ -122,3 +122,19 @@ func (handler *ProductHandler) GetSingleProduct(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success read data.", result))
 }
+
+// read product by id
+func (handler *ProductHandler) GetStoreProduct(c echo.Context) error {
+	userID := middlewares.ExtractTokenUserId(c)
+	storeID, err := handler.productService.GetStoreID(userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
+	}
+
+	result, errFirst := handler.productService.GetStoreProducts(storeID)
+	if errFirst != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data. "+errFirst.Error(), nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success read data.", result))
+}
