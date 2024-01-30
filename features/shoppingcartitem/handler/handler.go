@@ -83,7 +83,6 @@ func (handler *ItemHandler) CreateItem(c echo.Context) error {
 	newItem.Processor = res.Processor
 	newItem.RAM = res.RAM
 	newItem.Storage = res.Storage
-	newItem.TotalPrice = float64(newItem.Quantity) * newItem.Price
 	newItem.Gambar = res.Gambar
 
 	errBind := c.Bind(&newItem)
