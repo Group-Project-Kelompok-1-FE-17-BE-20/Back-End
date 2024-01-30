@@ -70,7 +70,7 @@ func (handler *ItemHandler) CreateItem(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error convert data, "+err.Error(), nil))
 	}
 
-	res, err := handler.itemService.GetPrice(uint(product_int))
+	res, err := handler.itemService.GetDataProduct(uint(product_int))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
 	}
@@ -150,15 +150,12 @@ func (handler *ItemHandler) DeleteItem(c echo.Context) error {
 }
 
 // update item
-func (handler *ItemHandler) GetItem(c echo.Context) error {
-	// mendapatkan productId
-	itemID := c.Param("item_id")
-	item_int, err := strconv.Atoi(itemID)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error convert data, "+err.Error(), nil))
-	}
+func (handler *ItemHandler) GetItems(c echo.Context) error {
+	userID := middlewares.ExtractTokenUserId(c)
 
-	result, errRead := handler.itemService.GetCartItem(uint(item_int))
+	cart_id, _ := handler.itemService.GetCartID(userID)
+
+	result, errRead := handler.itemService.GetCartItems(uint(cart_id))
 	if errRead != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data. "+errRead.Error(), nil))
 	}

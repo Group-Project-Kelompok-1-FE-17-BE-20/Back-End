@@ -58,7 +58,7 @@ func (repo *itemQuery) GetCartID(userID uint) (uint, error) {
 	return cartID, nil
 }
 
-func (repo *itemQuery) GetPrice(productID uint) (product.Core, error) {
+func (repo *itemQuery) GetDataProduct(productID uint) (product.Core, error) {
 	var productData database.Product
 	tx := repo.db.Where("ID = ?", productID).First(&productData)
 	if tx.Error != nil {
@@ -119,14 +119,14 @@ func (repo *itemQuery) Delete(input shoppingcartitem.Core) error {
 	return nil
 }
 
-func (repo *itemQuery) GetCartItem(item_id uint) (shoppingcartitem.Core, error) {
-	var singleCartItem database.ShoppingCartItem
-	tx := repo.db.Where("ID = ?", item_id).First(&singleCartItem)
+func (repo *itemQuery) GetCartItems(cart_id uint) ([]shoppingcartitem.Core, error) {
+	var manyCartItems []database.ShoppingCartItem
+	tx := repo.db.Where("shopping_cart_id = ?", cart_id).Find(&manyCartItems)
 	if tx.Error != nil {
-		return shoppingcartitem.Core{}, tx.Error
+		return nil, tx.Error
 	}
 
-	cartItemCore := ModelToCore(singleCartItem)
+	cartItemsCore := ModelGormToCore(manyCartItems)
 
-	return cartItemCore, nil
+	return cartItemsCore, nil
 }

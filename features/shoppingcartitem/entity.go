@@ -35,12 +35,12 @@ type ItemDataInterface interface {
 	InsertCart(input CoreCart) error
 	GetCartID(userID uint) (uint, error)
 	SelectCart(userID uint) (CoreCart, error)
-	GetPrice(productID uint) (product.Core, error)
+	GetDataProduct(productID uint) (product.Core, error)
 	Insert(input Core) error
 	Update(productId uint, input Core) error
 	GetItemById(productId uint) (Core, error)
 	Delete(input Core) error
-	GetCartItem(uint) (Core, error)
+	GetCartItems(uint) ([]Core, error)
 }
 
 // interface untuk Service Layer
@@ -48,10 +48,10 @@ type ItemServiceInterface interface {
 	CreateCart(input CoreCart) error
 	GetCart(userID uint) (CoreCart, error)
 	GetCartID(userID uint) (uint, error)
-	GetPrice(productID uint) (product.Core, error)
+	GetDataProduct(productID uint) (product.Core, error)
 	Create(input Core) error
 	Update(productId uint, input Core) error
 	GetItemById(productId uint) (Core, error)
 	Delete(input Core) error
-	GetCartItem(uint) (Core, error)
+	GetCartItems(uint) ([]Core, error)
 }
