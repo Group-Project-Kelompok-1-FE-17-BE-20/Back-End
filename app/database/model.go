@@ -57,9 +57,14 @@ type ShoppingCartItem struct {
 	gorm.Model
 	ShoppingCartID uint    `gorm:"not null" json:"cartId" form:"cartId"`
 	ProductID      uint    `gorm:"not null" json:"productId" form:"productId"`
+	Tipe           string  `gorm:"type:string" json:"model" form:"model"`
+	Price          float64 `gorm:"type:decimal(10,2)" json:"price" form:"price"`
+	Processor      string  `gorm:"type:string" json:"processor" form:"processor"`
+	RAM            string  `gorm:"type:string" json:"ram" form:"ram"`
+	Storage        string  `gorm:"type:string" json:"storage" form:"storage"`
 	Quantity       uint    `gorm:"not null" json:"quantity" form:"quantity"`
-	UnitPrice      float64 `gorm:"not null" json:"unitPrice" form:"unitPrice"`
 	TotalPrice     float64 `gorm:"not null" json:"totalPrice" form:"totalPrice"`
+	Gambar         string  `gorm:"type:string" json:"gambar" form:"gambar" binding:"uri"`
 	ShoppingCart   ShoppingCart
 }
 
