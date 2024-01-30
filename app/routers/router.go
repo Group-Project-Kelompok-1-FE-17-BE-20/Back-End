@@ -15,9 +15,9 @@ import (
 	_StoreHandler "Laptop/features/store/handler"
 	_StoreService "Laptop/features/store/service"
 
-	_CartData "Laptop/features/shoppingcart/data"
-	_CartHandler "Laptop/features/shoppingcart/handler"
-	_CartService "Laptop/features/shoppingcart/service"
+	// _CartData "Laptop/features/shoppingcart/data"
+	// _CartHandler "Laptop/features/shoppingcart/handler"
+	// _CartService "Laptop/features/shoppingcart/service"
 
 	_ItemData "Laptop/features/shoppingcartitem/data"
 	_ItemHandler "Laptop/features/shoppingcartitem/handler"
@@ -48,9 +48,9 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	StoreService := _StoreService.New(StoreRepo)
 	StoreHandler := _StoreHandler.New(StoreService)
 
-	cartData := _CartData.New(db)
-	cartService := _CartService.New(cartData)
-	cartHandlerAPI := _CartHandler.New(cartService)
+	// cartData := _CartData.New(db)
+	// cartService := _CartService.New(cartData)
+	// cartHandlerAPI := _CartHandler.New(cartService)
 
 	itemData := _ItemData.New(db)
 	itemService := _ItemService.New(itemData)
@@ -86,9 +86,6 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.GET("/all-products", productHandlerAPI.GetAllProducts, middlewares.JWTMiddleware())
 	e.GET("/products/:product_id", productHandlerAPI.GetSingleProduct)
 	e.GET("my-products", productHandlerAPI.GetStoreProduct, middlewares.JWTMiddleware())
-
-	// shopping cart
-	e.GET("/shopping-cart", cartHandlerAPI.GetCart, middlewares.JWTMiddleware())
 
 	// shopping cart item
 	e.POST("/shopping-cart", itemHandlerAPI.CreateItem, middlewares.JWTMiddleware())

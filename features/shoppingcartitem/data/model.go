@@ -5,6 +5,21 @@ import (
 	"Laptop/features/shoppingcartitem"
 )
 
+func CoreCartToGorm(core shoppingcartitem.CoreCart) database.ShoppingCart {
+	return database.ShoppingCart{
+		UserID: core.UserID,
+		Status: core.Status,
+	}
+}
+
+func CartGormToCartCore(model database.ShoppingCart) shoppingcartitem.CoreCart {
+	return shoppingcartitem.CoreCart{
+		ID:     model.ID,
+		UserID: model.UserID,
+		Status: model.Status,
+	}
+}
+
 func CoreToModel(input shoppingcartitem.Core) database.ShoppingCartItem {
 	return database.ShoppingCartItem{
 		ShoppingCartID: input.ShoppingCartID,
