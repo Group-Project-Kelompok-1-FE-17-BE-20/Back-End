@@ -44,6 +44,8 @@ func CoretoModelGorm(data []product.Core) []database.Product {
 
 func ModelToCore(input database.Product) product.Core {
 	return product.Core{
+		ID:          input.ID,
+		StoreID:     input.StoreID,
 		Storage:     input.Storage,
 		RAM:         input.RAM,
 		Price:       input.Price,

@@ -110,3 +110,16 @@ func (repo *productQuery) GetSingleProduct(productID_int int) (product.Core, err
 
 	return singleProductCore, nil
 }
+
+func (repo *productQuery) GetStoreProducts(store_id uint) ([]product.Core, error) {
+	var productsDataGorm []database.Product
+	tx := repo.db.Where("store_id = ?", store_id).Find(&productsDataGorm) // select * from users;
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	//mapping
+	allProductCore := ModelGormToCore(productsDataGorm)
+
+	return allProductCore, nil
+}
