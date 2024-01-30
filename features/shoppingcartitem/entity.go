@@ -40,6 +40,7 @@ type ItemDataInterface interface {
 	Update(productId uint, input Core) error
 	GetItemById(productId uint) (Core, error)
 	Delete(input Core) error
+	GetCartItem(uint) (Core, error)
 }
 
 // interface untuk Service Layer
@@ -52,4 +53,5 @@ type ItemServiceInterface interface {
 	Update(productId uint, input Core) error
 	GetItemById(productId uint) (Core, error)
 	Delete(input Core) error
+	GetCartItem(uint) (Core, error)
 }
