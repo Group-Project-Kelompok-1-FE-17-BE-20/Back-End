@@ -76,7 +76,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.GET("/stores", StoreHandler.GetAllStore, middlewares.JWTMiddleware())
 	// e.GET("/stores/:store_id", StoreHandler.GetStoreById, middlewares.JWTMiddleware()) // error
 	e.POST("/stores", StoreHandler.CreateStore, middlewares.JWTMiddleware())
-	e.PUT("/stores", StoreHandler.UpdateStoreById, middlewares.JWTMiddleware())
+	e.PUT("/stores/:store_id", StoreHandler.UpdateStoreById, middlewares.JWTMiddleware())
 	e.DELETE("/stores", StoreHandler.DeleteStoreById, middlewares.JWTMiddleware())
 
 	// product
