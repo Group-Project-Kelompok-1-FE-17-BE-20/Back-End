@@ -2,6 +2,7 @@ package data
 
 import (
 	"Laptop/app/database"
+	"Laptop/features/product"
 	"Laptop/features/shoppingcartitem"
 	"errors"
 
@@ -57,15 +58,15 @@ func (repo *itemQuery) GetCartID(userID uint) (uint, error) {
 	return cartID, nil
 }
 
-func (repo *itemQuery) GetPrice(productID uint) (float64, error) {
+func (repo *itemQuery) GetPrice(productID uint) (product.Core, error) {
 	var productData database.Product
 	tx := repo.db.Where("ID = ?", productID).First(&productData)
 	if tx.Error != nil {
-		return 0, tx.Error
+		return product.Core{}, tx.Error
 	}
 
-	productPrice := productData.Price
-	return productPrice, nil
+	productCore := ModelProductToCore(productData)
+	return productCore, nil
 }
 
 func (repo *itemQuery) Insert(input shoppingcartitem.Core) error {

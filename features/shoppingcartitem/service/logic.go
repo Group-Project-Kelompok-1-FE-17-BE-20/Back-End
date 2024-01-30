@@ -1,6 +1,7 @@
 package service
 
 import (
+	"Laptop/features/product"
 	"Laptop/features/shoppingcartitem"
 )
 
@@ -36,7 +37,7 @@ func (service *itemService) GetCartID(input uint) (uint, error) {
 	return res, err
 }
 
-func (service *itemService) GetPrice(input uint) (float64, error) {
+func (service *itemService) GetPrice(input uint) (product.Core, error) {
 	// logic validation
 	res, err := service.itemData.GetPrice(input)
 	return res, err

@@ -65,21 +65,26 @@ func (handler *ItemHandler) CreateItem(c echo.Context) error {
 	cart_id, _ := handler.itemService.GetCartID(userID)
 
 	productId := c.QueryParam("productId")
-	intID, err := strconv.Atoi(productId)
+	product_int, err := strconv.Atoi(productId)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error convert data, "+err.Error(), nil))
 	}
 
-	res, err := handler.itemService.GetPrice(uint(intID))
+	res, err := handler.itemService.GetPrice(uint(product_int))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
 	}
 
 	newItem := ItemRequest{}
 	newItem.ShoppingCartID = cart_id
-	newItem.ProductID = uint(intID)
-	newItem.UnitPrice = res
-	newItem.TotalPrice = 7000.00
+	newItem.ProductID = uint(product_int)
+	newItem.Tipe = res.Tipe
+	newItem.Price = res.Price
+	newItem.Processor = res.Processor
+	newItem.RAM = res.RAM
+	newItem.Storage = res.Storage
+	newItem.TotalPrice = float64(newItem.Quantity) * newItem.Price
+	newItem.Gambar = res.Gambar
 
 	errBind := c.Bind(&newItem)
 	if errBind != nil {
