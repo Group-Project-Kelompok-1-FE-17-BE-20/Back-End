@@ -15,6 +15,21 @@ func New(repo shoppingcartitem.ItemDataInterface) shoppingcartitem.ItemServiceIn
 	}
 }
 
+func (service *itemService) CreateCart(input shoppingcartitem.CoreCart) error {
+	// logic validation
+	err := service.itemData.InsertCart(input)
+	return err
+}
+
+// GetTaskById implements task.TaskServiceInterface.
+func (service *itemService) GetCart(userID uint) (shoppingcartitem.CoreCart, error) {
+	result, err := service.itemData.SelectCart(userID)
+	if err != nil {
+		return shoppingcartitem.CoreCart{}, err
+	}
+	return result, nil
+}
+
 func (service *itemService) GetCartID(input uint) (uint, error) {
 	// logic validation
 	res, err := service.itemData.GetCartID(input)

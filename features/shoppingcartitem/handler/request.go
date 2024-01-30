@@ -12,6 +12,19 @@ type ItemRequest struct {
 	TotalPrice     float64 `gorm:"not null" json:"totalPrice" form:"totalPrice"`
 }
 
+type CartRequest struct {
+	UserID uint   `json:"user_id" form:"user_id"`
+	Status string `gorm:"type:string" json:"status" form:"status"`
+}
+
+// Mapping dari struct TaskRequest To struct Core Task
+func CartReqToCore(req CartRequest) shoppingcartitem.CoreCart {
+	return shoppingcartitem.CoreCart{
+		UserID: req.UserID,
+		Status: req.Status,
+	}
+}
+
 func RequestToCore(input ItemRequest) shoppingcartitem.Core {
 	return shoppingcartitem.Core{
 		ShoppingCartID: input.ShoppingCartID,

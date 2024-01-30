@@ -4,6 +4,7 @@ import (
 	"Laptop/app/middlewares"
 	"Laptop/features/shoppingcartitem"
 	"Laptop/utils/responses"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -20,14 +21,48 @@ func New(service shoppingcartitem.ItemServiceInterface) *ItemHandler {
 	}
 }
 
+func (handler *ItemHandler) GetNewCart(c echo.Context) error {
+	userID := middlewares.ExtractTokenUserId(c)
+
+	newCart := CartRequest{}
+	errBind := c.Bind(&newCart)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data. data not valid", nil))
+	}
+
+	// Tambahkan userID ke objek CartRequest
+	newCart.UserID = userID
+	newCart.Status = "Kosong"
+
+	cartCore := CartReqToCore(newCart)
+
+	errCreate := handler.itemService.CreateCart(cartCore)
+	if errCreate != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error insert data"+errCreate.Error(), nil))
+	}
+
+	result, err := handler.itemService.GetCart(userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
+	}
+
+	resultResponse := MapCoreStoreToStoreRes(result)
+	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusFound, "success create a cart", resultResponse))
+}
+
 // insert item
 func (handler *ItemHandler) CreateItem(c echo.Context) error {
 	// Mengambil ID pengguna dari token JWT yang terkait dengan permintaan
 	userID := middlewares.ExtractTokenUserId(c)
-	result, err := handler.itemService.GetCartID(userID)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
+	cartID, err := handler.itemService.GetCartID(userID)
+	if cartID == 0 {
+		errNew := handler.GetNewCart(c)
+		if errNew != nil {
+			return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error make a new cart"+errNew.Error(), nil))
+		}
 	}
+
+	cart_id, _ := handler.itemService.GetCartID(userID)
 
 	productId := c.QueryParam("productId")
 	intID, err := strconv.Atoi(productId)
@@ -41,15 +76,16 @@ func (handler *ItemHandler) CreateItem(c echo.Context) error {
 	}
 
 	newItem := ItemRequest{}
-	newItem.ShoppingCartID = result
+	newItem.ShoppingCartID = cart_id
 	newItem.ProductID = uint(intID)
 	newItem.UnitPrice = res
-	newItem.TotalPrice = newItem.UnitPrice * float64(newItem.Quantity)
+	newItem.TotalPrice = 7000.00
 
 	errBind := c.Bind(&newItem)
 	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data. data not valid", newItem))
 	}
+	log.Println(newItem)
 
 	itemCore := RequestToCore(newItem)
 

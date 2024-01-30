@@ -16,6 +16,21 @@ type ItemResponse struct {
 	UpdatedAt      time.Time `json:"updated_at" form:"updated_at"`
 }
 
+type CartResponse struct {
+	ID     uint   `json:"id" form:"id"`
+	UserID uint   `json:"user_id" form:"user_id"`
+	Status string `gorm:"type:string" json:"status" form:"status"`
+}
+
+// Mapping CorePrject to TaskResponsee
+func MapCoreStoreToStoreRes(core shoppingcartitem.CoreCart) CartResponse {
+	return CartResponse{
+		ID:     core.ID,
+		UserID: core.UserID,
+		Status: core.Status,
+	}
+}
+
 func CoreToResponse(input shoppingcartitem.Core) ItemResponse {
 	return ItemResponse{
 		ID:             input.ID,

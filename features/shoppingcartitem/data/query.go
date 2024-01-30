@@ -18,6 +18,34 @@ func New(db *gorm.DB) shoppingcartitem.ItemDataInterface {
 	}
 }
 
+func (repo *itemQuery) InsertCart(input shoppingcartitem.CoreCart) error {
+	// simpan ke DB
+	newProductGorm := CoreCartToGorm(input)
+
+	tx := repo.db.Create(&newProductGorm) // proses query insert
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	return nil
+}
+
+// Select implements task.TaskDataInterface.
+func (r *itemQuery) SelectCart(userID uint) (shoppingcartitem.CoreCart, error) {
+	var cartData database.ShoppingCart
+	tx := r.db.Where("user_id = ?", userID).First(&cartData)
+	if tx.Error != nil {
+		return shoppingcartitem.CoreCart{}, tx.Error
+	}
+
+	if tx.RowsAffected == 0 {
+		return shoppingcartitem.CoreCart{}, errors.New("cart not found")
+	}
+
+	coreCart := CartGormToCartCore(cartData)
+	return coreCart, nil
+}
+
 func (repo *itemQuery) GetCartID(userID uint) (uint, error) {
 	var cartData database.ShoppingCart
 	tx := repo.db.Where("user_id = ?", userID).First(&cartData)
