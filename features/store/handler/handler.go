@@ -77,7 +77,7 @@ func (h *StoreHandler) UpdateStoreById(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "user id is not valid", nil))
 	}
 	// Mengambil ID pengguna dari token JWT yang terkait dengan permintaan
-	UserID := middlewares.ExtractTokenUserId(c)
+	userID := middlewares.ExtractTokenUserId(c)
 	StoreInput := StoreRequest{}
 	errBind := c.Bind(&StoreInput)
 	if errBind != nil {
@@ -87,22 +87,23 @@ func (h *StoreHandler) UpdateStoreById(c echo.Context) error {
 	log.Println(responURL.SecureURL)
 
 	//StoreInput := StoreRequest{}
-	StoreInput.UserID = UserID
+	StoreInput.UserID = userID
 	StoreInput.ImageToko = responURL.SecureURL
-	//Mapping task reques to core task
+
+	//Mapping store reques to core task
 	Core := MapStoreReqToCoreStore(StoreInput)
-	err = h.StoreService.UpdateById(uint(idConv), UserID, Core)
+	err = h.StoreService.UpdateById(uint(idConv), userID, Core)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error update data, "+err.Error(), nil))
 	}
 
-	// Get task data for response
-	updatedStore, err := h.StoreService.GetById(uint(idConv), UserID)
+	// Get store data for response
+	updatedStore, err := h.StoreService.GetById(uint(idConv), userID)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "task not found", nil))
 	}
 	resultResponse := MapCoreStoreToStoreRes(updatedStore)
-	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "task updated successfully", resultResponse))
+	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "store updated successfully", resultResponse))
 }
 
 func (h *StoreHandler) DeleteStoreById(c echo.Context) error {
