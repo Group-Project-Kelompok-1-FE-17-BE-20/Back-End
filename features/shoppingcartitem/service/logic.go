@@ -37,9 +37,9 @@ func (service *itemService) GetCartID(input uint) (uint, error) {
 	return res, err
 }
 
-func (service *itemService) GetPrice(input uint) (product.Core, error) {
+func (service *itemService) GetDataProduct(input uint) (product.Core, error) {
 	// logic validation
-	res, err := service.itemData.GetPrice(input)
+	res, err := service.itemData.GetDataProduct(input)
 	return res, err
 }
 
@@ -67,8 +67,8 @@ func (service *itemService) Delete(input shoppingcartitem.Core) error {
 	return err
 }
 
-func (service *itemService) GetCartItem(input uint) (shoppingcartitem.Core, error) {
+func (service *itemService) GetCartItems(input uint) ([]shoppingcartitem.Core, error) {
 	// logic validation
-	res, err := service.itemData.GetCartItem(input)
+	res, err := service.itemData.GetCartItems(input)
 	return res, err
 }

@@ -93,6 +93,7 @@ func ModelGormToCore(data []database.ShoppingCartItem) []shoppingcartitem.Core {
 	var itemsData []shoppingcartitem.Core
 	for _, input := range data {
 		var itemInput = shoppingcartitem.Core{
+			ID:             input.ID,
 			ShoppingCartID: input.ShoppingCartID,
 			ProductID:      input.ProductID,
 			Tipe:           input.Tipe,

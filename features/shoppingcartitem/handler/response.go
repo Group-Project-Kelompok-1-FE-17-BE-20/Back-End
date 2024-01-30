@@ -27,7 +27,6 @@ type CartResponse struct {
 	Status string `gorm:"type:string" json:"status" form:"status"`
 }
 
-// Mapping CorePrject to TaskResponsee
 func MapCoreStoreToStoreRes(core shoppingcartitem.CoreCart) CartResponse {
 	return CartResponse{
 		ID:     core.ID,
