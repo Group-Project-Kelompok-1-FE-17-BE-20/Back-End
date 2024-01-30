@@ -61,6 +61,8 @@ func ModelGormToCore(data []database.Product) []product.Core {
 	var productsData []product.Core
 	for _, input := range data {
 		var productInput = product.Core{
+			ID:          input.ID,
+			StoreID:     input.StoreID,
 			Storage:     input.Storage,
 			RAM:         input.RAM,
 			Price:       input.Price,
