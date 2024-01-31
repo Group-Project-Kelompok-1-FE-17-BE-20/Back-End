@@ -22,17 +22,17 @@ func New(service order.OrderServiceInterface) *OrderHandler {
 }
 
 // insert order
-func (handler *OrderHandler) CreateOrder(c echo.Context) error {
+func (handler *OrderHandler) CreateOrder(c echo.Context) (order.Core, error) {
 	// Mengambil ID pengguna dari token JWT yang terkait dengan permintaan
 	userID := middlewares.ExtractTokenUserId(c)
 	result, err := handler.orderService.GetCartID(userID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
+		return order.Core{}, c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
 	}
 
 	resGet, err := handler.orderService.GetAllCartItem(result)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
+		return order.Core{}, c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
 	}
 
 	itemResponses := ResGetRequest(resGet)
@@ -44,17 +44,50 @@ func (handler *OrderHandler) CreateOrder(c echo.Context) error {
 
 	errBind := c.Bind(&newOrder)
 	if errBind != nil {
-		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data. data not valid", newOrder))
+		return order.Core{}, c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data. data not valid", newOrder))
 	}
 
 	orderCore := RequestToCore(newOrder)
 
 	errCreate := handler.orderService.Create(orderCore)
 	if errCreate != nil {
+		return order.Core{}, c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error insert data"+errCreate.Error(), nil))
+	}
+
+	return orderCore, c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success insert data", orderCore))
+}
+
+func (handler *OrderHandler) CreateOrderItem(c echo.Context) error {
+	// Mengambil ID pengguna dari token JWT yang terkait dengan permintaan
+	userID := middlewares.ExtractTokenUserId(c)
+
+	// mendapatkan cart id
+	cart_id, err := handler.orderService.GetCartID(userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
+	}
+
+	// // dengan cart id, mendapatkan cart items
+	// resGet, err := handler.orderService.GetAllCartItem(cart_id)
+	// if err != nil {
+	// 	return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
+	// }
+
+	// membuat order
+	orderCore, errOr := handler.CreateOrder(c)
+	if errOr != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error make an order"+errOr.Error(), nil))
+	}
+
+	// mendapatkan order id dari order yang telah dibuat
+	order_id, err := handler.orderService.GetOrderID(cart_id)
+
+	errCreate := handler.orderService.CreateOrderItem(order_id, orderCore.Item)
+	if errCreate != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error insert data"+errCreate.Error(), nil))
 	}
 
-	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success insert data", orderCore))
+	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success insert data", nil))
 }
 
 func (handler *OrderHandler) GetDetailOrder(c echo.Context) error {

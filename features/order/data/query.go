@@ -58,6 +58,37 @@ func (repo *orderQuery) Insert(input order.Core) error {
 	return nil
 }
 
+// Insert implements order.OrderDataInterface.
+func (repo *orderQuery) GetOrderID(cart_id uint) (uint, error) {
+	var orderData database.Order
+	tx := repo.db.Where("shopping_cart_id = ?", cart_id).First(&orderData)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+
+	orderID := orderData.ID
+	return orderID, nil
+}
+
+func (repo *orderQuery) CreateOrderItem(orderID uint, input []order.CoreItem) error {
+	newOrderItemGorm := ItemsCoreToModel(orderID, input)
+
+	for _, item := range newOrderItemGorm {
+		// operasi create untuk setiap elemen item
+		tx := repo.db.Create(&item)
+		if tx.Error != nil {
+			return tx.Error
+		}
+	}
+
+	// tx := repo.db.Create(&newOrderItemGorm)
+	// if tx.Error != nil {
+	// 	return tx.Error
+	// }
+
+	return nil
+}
+
 func (repo *orderQuery) DetailOrder(db *sql.DB, userID uint) ([]order.DetailOrder, uint, error) {
 	// *** read / select data all_accounts *** //
 	var itemsOrdered []order.DetailOrder
