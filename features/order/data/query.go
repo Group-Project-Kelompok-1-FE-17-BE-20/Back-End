@@ -73,6 +73,8 @@ func (repo *orderQuery) GetOrderID(cart_id uint) (uint, error) {
 func (repo *orderQuery) CreateOrderItem(orderID uint, input []order.CoreItem) error {
 	newOrderItemGorm := ItemsCoreToModel(orderID, input)
 
+	fmt.Println("data item gorm: ", newOrderItemGorm)
+
 	for _, item := range newOrderItemGorm {
 		// operasi create untuk setiap elemen item
 		tx := repo.db.Create(&item)
@@ -85,6 +87,22 @@ func (repo *orderQuery) CreateOrderItem(orderID uint, input []order.CoreItem) er
 	// if tx.Error != nil {
 	// 	return tx.Error
 	// }
+
+	return nil
+}
+
+func (repo *orderQuery) CreateOrderItemSRaw(db *sql.DB, orderID uint, input []order.CoreItem) error {
+	// Query SQL dan parameter placeholder
+	sqlQuery := "INSERT INTO order_items (order_id, productid, jumlah, total_amount) VALUES (?, ?, ?, ?)"
+
+	// Loop untuk setiap OrderItem
+	for _, oi := range input {
+		// Eksekusi query SQL
+		_, err := db.Exec(sqlQuery, orderID, oi.Productid, oi.Jumlah, oi.TotalAmount)
+		if err != nil {
+			log.Fatal("cannot run insert query", err)
+		}
+	}
 
 	return nil
 }

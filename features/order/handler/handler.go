@@ -6,6 +6,7 @@ import (
 	"Laptop/app/middlewares"
 	"Laptop/features/order"
 	"Laptop/utils/responses"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -82,10 +83,23 @@ func (handler *OrderHandler) CreateOrderItem(c echo.Context) error {
 	// mendapatkan order id dari order yang telah dibuat
 	order_id, err := handler.orderService.GetOrderID(cart_id)
 
-	errCreate := handler.orderService.CreateOrderItem(order_id, orderCore.Item)
-	if errCreate != nil {
-		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error insert data"+errCreate.Error(), nil))
-	}
+	fmt.Println("data item: ", order_id, orderCore.Item)
+
+	// // insert via gorm
+	// errCreate := handler.orderService.CreateOrderItem(order_id, orderCore.Item)
+	// if errCreate != nil {
+	// 	return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error insert data"+errCreate.Error(), nil))
+	// }
+
+	// insert via sql raw
+	// // Membuka koneksi ke database
+	// cfg := config.InitConfig()
+	// dbRaw := database.InitRawSql(cfg)
+
+	// errCreate2 := handler.orderService.CreateOrderItemSRaw(dbRaw, order_id, orderCore.Item)
+	// if errCreate2 != nil {
+	// 	return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error insert data"+errCreate2.Error(), nil))
+	// }
 
 	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success insert data", nil))
 }
