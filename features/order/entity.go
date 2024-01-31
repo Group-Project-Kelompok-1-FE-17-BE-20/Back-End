@@ -46,6 +46,7 @@ type OrderDataInterface interface {
 	Insert(input Core) error
 	GetOrderID(cart_id uint) (uint, error)
 	CreateOrderItem(order_id uint, input []CoreItem) error
+	CreateOrderItemSRaw(db *sql.DB, order_id uint, input []CoreItem) error
 	DetailOrder(db *sql.DB, userID uint) ([]DetailOrder, uint, error)
 	DateOrder(db *sql.DB, orderID uint) (time.Time, error)
 	CreateHistory(CoreHistory) error
@@ -59,6 +60,7 @@ type OrderServiceInterface interface {
 	Create(input Core) error
 	GetOrderID(cart_id uint) (uint, error)
 	CreateOrderItem(order_id uint, input []CoreItem) error
+	CreateOrderItemSRaw(db *sql.DB, order_id uint, input []CoreItem) error
 	DetailOrder(db *sql.DB, userID uint) ([]DetailOrder, uint, error)
 	DateOrder(db *sql.DB, orderID uint) (time.Time, error)
 	CreateHistory(CoreHistory) error

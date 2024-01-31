@@ -46,6 +46,11 @@ func (service *orderService) CreateOrderItem(orderID uint, input []order.CoreIte
 	return err
 }
 
+func (service *orderService) CreateOrderItemSRaw(db *sql.DB, orderID uint, input []order.CoreItem) error {
+	err := service.orderData.CreateOrderItemSRaw(db, orderID, input)
+	return err
+}
+
 func (service *orderService) DetailOrder(input *sql.DB, userID uint) ([]order.DetailOrder, uint, error) {
 	result, id, err := service.orderData.DetailOrder(input, userID)
 	return result, id, err
