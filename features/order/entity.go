@@ -44,6 +44,8 @@ type OrderDataInterface interface {
 	GetCartID(userID uint) (uint, error)
 	GetAllCartItem(cartID uint) ([]shoppingcartitem.Core, error)
 	Insert(input Core) error
+	GetOrderID(cart_id uint) (uint, error)
+	CreateOrderItem(order_id uint, input []CoreItem) error
 	DetailOrder(db *sql.DB, userID uint) ([]DetailOrder, uint, error)
 	DateOrder(db *sql.DB, orderID uint) (time.Time, error)
 	CreateHistory(CoreHistory) error
@@ -55,6 +57,8 @@ type OrderServiceInterface interface {
 	GetCartID(userID uint) (uint, error)
 	GetAllCartItem(cartID uint) ([]shoppingcartitem.Core, error)
 	Create(input Core) error
+	GetOrderID(cart_id uint) (uint, error)
+	CreateOrderItem(order_id uint, input []CoreItem) error
 	DetailOrder(db *sql.DB, userID uint) ([]DetailOrder, uint, error)
 	DateOrder(db *sql.DB, orderID uint) (time.Time, error)
 	CreateHistory(CoreHistory) error

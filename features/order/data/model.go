@@ -56,6 +56,43 @@ func CoreToModel(input order.Core) database.Order {
 	}
 }
 
+func GormCartItemsToCore(data []database.ShoppingCartItem) []shoppingcartitem.Core {
+	var itemsData []shoppingcartitem.Core
+	for _, input := range data {
+		var itemInput = shoppingcartitem.Core{
+			ID:             input.ID,
+			ShoppingCartID: input.ShoppingCartID,
+			ProductID:      input.ProductID,
+			Tipe:           input.Tipe,
+			Price:          input.Price,
+			Processor:      input.Processor,
+			RAM:            input.RAM,
+			Storage:        input.Storage,
+			Quantity:       input.Quantity,
+			TotalPrice:     input.TotalPrice,
+			Gambar:         input.Gambar,
+		}
+		itemsData = append(itemsData, itemInput)
+	}
+
+	return itemsData
+}
+
+func ItemsCoreToModel(orderID uint, data []order.CoreItem) []database.OrderItem {
+	var itemsData []database.OrderItem
+	for _, input := range data {
+		var itemInput = database.OrderItem{
+			OrderID:     orderID,
+			Productid:   input.Productid,
+			Jumlah:      input.Jumlah,
+			TotalAmount: input.TotalAmount,
+		}
+		itemsData = append(itemsData, itemInput)
+	}
+
+	return itemsData
+}
+
 func HistoryToModel(input order.CoreHistory) database.OrderHistory {
 	return database.OrderHistory{
 		OrderID:        input.OrderID,
