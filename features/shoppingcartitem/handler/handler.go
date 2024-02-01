@@ -75,6 +75,12 @@ func (handler *ItemHandler) CreateItem(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
 	}
 
+	qty := c.FormValue("quantity")
+	qty_int, err := strconv.Atoi(qty)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error convert data, "+err.Error(), nil))
+	}
+
 	newItem := ItemRequest{}
 	newItem.ShoppingCartID = cart_id
 	newItem.ProductID = uint(product_int)
@@ -83,6 +89,7 @@ func (handler *ItemHandler) CreateItem(c echo.Context) error {
 	newItem.Processor = res.Processor
 	newItem.RAM = res.RAM
 	newItem.Storage = res.Storage
+	newItem.TotalPrice = float64(qty_int) * newItem.Price
 	newItem.Gambar = res.Gambar
 
 	errBind := c.Bind(&newItem)
