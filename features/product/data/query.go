@@ -35,7 +35,7 @@ func (repo *productQuery) GetStoreID(userID uint) (uint, error) {
 
 func (repo *productQuery) Photo(c echo.Context) *uploader.UploadResult {
 	urlCloudinary := "cloudinary://377166738273893:ga3Zq7Ts84gJ-Ltn-gyMkTgHd40@dltcy9ghn"
-	fileHeader, _ := c.FormFile("image")
+	fileHeader, _ := c.FormFile("gambar")
 
 	file, _ := fileHeader.Open()
 	//log.Println(fileHeader.Filename)
