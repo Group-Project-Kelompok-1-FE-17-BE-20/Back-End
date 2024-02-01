@@ -3,6 +3,7 @@ package handler
 import (
 	"Laptop/app/middlewares"
 	user "Laptop/features/user"
+	"fmt"
 	"log"
 
 	"Laptop/utils/responses"
@@ -102,12 +103,56 @@ func (h *UserHandler) UpdateUserById(c echo.Context) error {
 	userID := middlewares.ExtractTokenUserId(c)
 	userInput := UserRequest{}
 	///-------
-	responURL := h.userService.Photo(c)
-	log.Println(responURL.SecureURL)
 
 	//newProduct := UserRequest{}
+
+	// oldPrice := c.FormValue("price")
+	// if oldPrice != "" {
+	// 	newPrice, errConv := strconv.Atoi(oldPrice)
+	// 	if errConv != nil {
+	// 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error convert data", nil))
+	// 	}
+	// 	newUpdate.Price = float64(newPrice)
+	// }
+
+	// oldStock := c.FormValue("stock")
+	// if oldStock != "" {
+	// 	newStock, errConv := strconv.Atoi(oldStock)
+	// 	if errConv != nil {
+	// 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error convert data", nil))
+	// 	}
+	// 	newUpdate.Stock = newStock
+	// }
+
+	oldPhoto, _ := c.FormFile("image_profil")
+	if oldPhoto != nil {
+		responURL := h.userService.Photo(c)
+		log.Println(responURL.SecureURL)
+		userInput.ImageProfil = responURL.SecureURL
+	}
+
 	userInput.ID = userID
-	userInput.ImageProfil = responURL.SecureURL
+	userInput.Username = c.FormValue("username")
+	userInput.Name = c.FormValue("nama_lengkap")
+	userInput.Email = c.FormValue("email")
+	userInput.Alamat = c.FormValue("alamat")
+	userInput.JenisKelamin = c.FormValue("jenis_kelamin")
+	userInput.NomorHP = c.FormValue("nomor_hp")
+	userInput.Password = c.FormValue("password") // jika password tidak di isi maka ganti dengan password lama
+	// newPassword := c.FormValue("password")
+
+	// // Memeriksa apakah password baru diberikan
+	// if newPassword != "" {
+	// 	userInput.Password = newPassword
+	// } else {
+	// 	// Jika password baru tidak diberikan, biarkan nilai password lama
+	// 	user, err := h.userService.GetById(uint(userID))
+	// 	if err == nil {
+	// 		userInput.Password = user.Password
+	// 	}
+	// }
+
+	fmt.Println("isi update: ", userInput)
 
 	///-------------------------------
 
