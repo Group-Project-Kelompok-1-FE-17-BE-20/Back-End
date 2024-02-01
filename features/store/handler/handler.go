@@ -4,6 +4,7 @@ import (
 	"Laptop/app/middlewares"
 	"Laptop/features/store"
 	"Laptop/utils/responses"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -83,12 +84,18 @@ func (h *StoreHandler) UpdateStoreById(c echo.Context) error {
 	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data", nil))
 	}
-	responURL := h.StoreService.Photo(c)
-	log.Println(responURL.SecureURL)
 
 	//StoreInput := StoreRequest{}
 	StoreInput.UserID = userID
-	StoreInput.ImageToko = responURL.SecureURL
+	StoreInput.NamaToko = c.FormValue("nama_toko")
+	StoreInput.AlamatToko = c.FormValue("alamat_toko")
+
+	oldPhoto, _ := c.FormFile("image_toko")
+	if oldPhoto != nil {
+		responURL := h.StoreService.Photo(c)
+		log.Println(responURL.SecureURL)
+		StoreInput.ImageToko = responURL.SecureURL
+	}
 
 	//Mapping store reques to core task
 	Core := MapStoreReqToCoreStore(StoreInput)
@@ -107,17 +114,23 @@ func (h *StoreHandler) UpdateStoreById(c echo.Context) error {
 }
 
 func (h *StoreHandler) DeleteStoreById(c echo.Context) error {
+	// Mengambil ID pengguna dari token JWT yang terkait dengan permintaan
+	userID := middlewares.ExtractTokenUserId(c)
+	if userID == 0 {
+		return c.JSON(http.StatusUnauthorized, responses.WebResponse(http.StatusUnauthorized, "Invalid user token", nil))
+	}
 	idParam := c.Param("store_id")
 	idConv, err := strconv.Atoi(idParam)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "user id is not valid", nil))
 	}
-	// Mengambil ID pengguna dari token JWT yang terkait dengan permintaan
-	userID := middlewares.ExtractTokenUserId(c)
+	fmt.Printf("idParam: %s\n", idParam)
+
 	err = h.StoreService.DeleteById(uint(idConv), userID)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error delete data, "+err.Error(), nil))
 	}
+	fmt.Printf("idConv: %d\n", idConv)
 	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success delete task", nil))
 }
