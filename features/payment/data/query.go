@@ -1,6 +1,7 @@
 package data
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -20,6 +21,26 @@ func New(db *gorm.DB) payment.PaymentData {
 	return &paymentQuery{
 		db: db,
 	}
+}
+
+func (pq *paymentQuery) GetOrderItems(dbRaw *sql.DB, userID uint) (uint, float64) {
+	var order_id uint
+	var total_amount float64
+
+	query := "SELECT order_items.order_id, SUM(order_items.total_amount) " +
+		"FROM order_items " +
+		"JOIN orders ON order_items.order_id = orders.id " +
+		"JOIN shopping_carts ON orders.shopping_cart_id = shopping_carts.id " +
+		"JOIN users ON shopping_carts.user_id = users.id WHERE users.id = ? " +
+		"GROUP BY order_items.order_id;"
+
+	rowID := dbRaw.QueryRow(query, userID)
+
+	if err := rowID.Scan(&order_id, &total_amount); err != nil {
+		log.Fatal("cannot scan data: ")
+	}
+
+	return order_id, total_amount
 }
 
 func (pq *paymentQuery) Payment(request payment.PaymentCore) (payment.PaymentCore, error) {
