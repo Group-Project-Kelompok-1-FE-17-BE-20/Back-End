@@ -1,6 +1,7 @@
 package payment
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -26,11 +27,13 @@ type PaymentHandler interface {
 }
 
 type PaymentService interface {
+	GetOrderItems(dbRaw *sql.DB, userID uint) (uint, float64)
 	Payment(request PaymentCore) (PaymentCore, error)
 	UpdatePayment(request PaymentCore) error
 }
 
 type PaymentData interface {
+	GetOrderItems(dbRaw *sql.DB, userID uint) (uint, float64)
 	Payment(request PaymentCore) (PaymentCore, error)
 	UpdatePayment(request PaymentCore) error
 }

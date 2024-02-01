@@ -3,8 +3,11 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
+	config "Laptop/app/configs"
+	"Laptop/app/database"
 	"Laptop/app/middlewares"
 	"Laptop/features/payment"
 	"Laptop/utils/responses"
@@ -30,14 +33,30 @@ func New(us payment.PaymentService) payment.PaymentHandler {
 
 func (tc *paymentHandler) Payment() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		request := createPaymentRequest{}
+		// Membuka koneksi ke database
+		cfg := config.InitConfig()
+		dbRaw := database.InitRawSql(cfg)
+
 		//result, err := middlewares.ExtractTokenUserId(c)
-		_, err := middlewares.ExtractToken(c)
+		userID, err := middlewares.ExtractToken(c)
 
 		if err != nil {
 			log.Error("missing or malformed JWT")
 			return c.JSON(http.StatusUnauthorized, responses.ResponseFormat(http.StatusUnauthorized, "", "Missing or Malformed JWT", nil, nil))
 		}
+
+		orderID, amount := tc.service.GetOrderItems(dbRaw, uint(userID))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error get data"+err.Error(), nil))
+		}
+
+		order_id := strconv.Itoa(int(orderID))
+		amountString := strconv.FormatFloat(amount, 'f', -1, 64)
+
+		// mendapatkan data dari form data
+		request := createPaymentRequest{}
+		request.OrderID = order_id
+		request.Amount = amountString
 
 		errBind := c.Bind(&request)
 		if errBind != nil {

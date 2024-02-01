@@ -1,6 +1,7 @@
 package service
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"strings"
@@ -23,6 +24,11 @@ func New(ud payment.PaymentData, v *validator.Validate) payment.PaymentService {
 		query:    ud,
 		validate: v,
 	}
+}
+
+func (ps *paymentService) GetOrderItems(dbRaw *sql.DB, userID uint) (uint, float64) {
+	order_id, amount := ps.query.GetOrderItems(dbRaw, userID)
+	return order_id, amount
 }
 
 // Payment implements payment.PaymentService
