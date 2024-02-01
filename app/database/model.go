@@ -74,6 +74,7 @@ type Order struct {
 	Item           []OrderItem `gorm:"foreignKey:OrderID"`
 	Status         string      `gorm:"not null" json:"status" form:"status"`
 	OrderHistory   OrderHistory
+	Payment        Payment
 }
 
 type OrderItem struct {
