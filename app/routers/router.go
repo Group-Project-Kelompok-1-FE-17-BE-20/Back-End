@@ -31,6 +31,11 @@ import (
 	_adminHandler "Laptop/features/admin/handler"
 	_adminService "Laptop/features/admin/service"
 
+	_paymentdata "Laptop/features/payment/data"
+	_paymenthandler "Laptop/features/payment/handler"
+	_paymentservice "Laptop/features/payment/service"
+
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
@@ -63,6 +68,11 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	adminRepo := _adminRepo.New(db)
 	adminService := _adminService.New(adminRepo)
 	adminHandlerAPI := _adminHandler.New(adminService)
+
+	paymentData := _paymentdata.New(db)
+	validate := validator.New()
+	paymentService := _paymentservice.New(paymentData, validate)
+	paymentHandler := _paymenthandler.New(paymentService)
 
 	// user
 	e.POST("/login", userHandlerAPI.Login)
@@ -102,4 +112,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.POST("/admin-login", adminHandlerAPI.Login)
 	e.GET("/admin", adminHandlerAPI.GetAllUser)
 	e.GET("/alluser", userHandlerAPI.GetAllUser)
+
+	e.POST("/payments", paymentHandler.Payment(), middlewares.JWTMiddleware())
+	e.POST("/payments/callback", paymentHandler.Notification())
 }

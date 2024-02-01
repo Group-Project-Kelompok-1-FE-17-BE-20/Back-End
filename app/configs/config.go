@@ -21,6 +21,10 @@ func InitConfig() *AppConfig {
 	return ReadEnv()
 }
 
+var (
+	MIDTRANS_SERVERKEY string
+)
+
 func ReadEnv() *AppConfig {
 	app := AppConfig{}
 	isRead := true
@@ -49,6 +53,10 @@ func ReadEnv() *AppConfig {
 		app.DB_NAME = val
 		isRead = false
 	}
+	if val, found := os.LookupEnv("MIDTRANS_SERVERKEY"); found {
+		MIDTRANS_SERVERKEY = val
+		isRead = false
+	}
 	//akan membaca file local.env
 	if isRead {
 		viper.AddConfigPath(".")
@@ -66,6 +74,7 @@ func ReadEnv() *AppConfig {
 		app.DB_PORT, _ = strconv.Atoi(viper.Get("DBPORT").(string))
 		app.DB_NAME = viper.Get("DBNAME").(string)
 		app.JWT_SECRET = viper.Get("JWTSECRET").(string)
+		MIDTRANS_SERVERKEY = viper.GetString("MIDTRANS_SERVERKEY")
 	}
 	return &app
 }

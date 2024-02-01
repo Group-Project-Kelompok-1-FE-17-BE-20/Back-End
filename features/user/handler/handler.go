@@ -101,10 +101,6 @@ func (h *UserHandler) GetUserById(c echo.Context) error {
 func (h *UserHandler) UpdateUserById(c echo.Context) error {
 	userID := middlewares.ExtractTokenUserId(c)
 	userInput := UserRequest{}
-	errBind := c.Bind(&userInput)
-	if errBind != nil {
-		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data", nil))
-	}
 	///-------
 	responURL := h.userService.Photo(c)
 	log.Println(responURL.SecureURL)
@@ -114,6 +110,12 @@ func (h *UserHandler) UpdateUserById(c echo.Context) error {
 	userInput.ImageProfil = responURL.SecureURL
 
 	///-------------------------------
+
+	errBind := c.Bind(&userInput)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data", nil))
+	}
+
 	//Mapping user reques to core user
 	Core := MapReqToCoreUser(userInput)
 	err := h.userService.UpdateById(uint(userID), Core)
