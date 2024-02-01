@@ -4,6 +4,7 @@ import (
 	"Laptop/app/middlewares"
 	"Laptop/features/product"
 	"Laptop/utils/responses"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -61,12 +62,49 @@ func (handler *ProductHandler) UpdateProduct(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error convert id param", nil))
 	}
 
-	var newUpdate product.Core
+	newUpdate := ProductRequest{}
+
+	oldPrice := c.FormValue("price")
+	if oldPrice != "" {
+		newPrice, errConv := strconv.Atoi(oldPrice)
+		if errConv != nil {
+			return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error convert data", nil))
+		}
+		newUpdate.Price = float64(newPrice)
+	}
+
+	oldStock := c.FormValue("stock")
+	if oldStock != "" {
+		newStock, errConv := strconv.Atoi(oldStock)
+		if errConv != nil {
+			return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error convert data", nil))
+		}
+		newUpdate.Stock = newStock
+	}
+
+	oldPhoto, _ := c.FormFile("gambar")
+	if oldPhoto != nil {
+		responURL := handler.productService.Photo(c)
+		newUpdate.Gambar = responURL.SecureURL
+	}
+
+	newUpdate.Storage = c.FormValue("storage")
+	newUpdate.RAM = c.FormValue("ram")
+	newUpdate.Description = c.FormValue("description")
+	newUpdate.Tipe = c.FormValue("model")
+	newUpdate.Brand = c.FormValue("brand")
+	newUpdate.Processor = c.FormValue("processor")
+	newUpdate.Categories = c.FormValue("categories")
+
+	fmt.Println("isi update: ", newUpdate)
+
 	if errBind := c.Bind(&newUpdate); errBind != nil {
 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data. data not valid", nil))
 	}
 
-	errUpdates := handler.productService.Update(productID_int, newUpdate)
+	newUpdateCore := RequestToCore(newUpdate)
+
+	errUpdates := handler.productService.Update(productID_int, newUpdateCore)
 	if errUpdates != nil {
 		return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error update data", nil))
 	}
