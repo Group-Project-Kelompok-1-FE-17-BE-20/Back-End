@@ -74,6 +74,7 @@ type Order struct {
 	Item           []OrderItem `gorm:"foreignKey:OrderID"`
 	Status         string      `gorm:"not null" json:"status" form:"status"`
 	OrderHistory   OrderHistory
+	Payment        Payment
 }
 
 type OrderItem struct {
@@ -100,4 +101,16 @@ type Admin struct {
 	Password string `gorm:"column:password;not null"`
 	// Users    User   `gorm:"foreignKey:AdminID"`
 	// Stores       []data.Store `
+}
+
+type Payment struct {
+	ID          string `json:"id" gorm:"primaryKey"`
+	OrderID     string `gorm:"type:varchar(21)"`
+	Amount      string
+	BankAccount string         `gorm:"type:enum('bca', 'bri', 'bni'); default:'bca'"`
+	VANumber    string         `gorm:"type:varchar(21)"`
+	Status      string         `gorm:"type:varchar(21)"`
+	CreatedAt   time.Time      `gorm:"type:datetime"`
+	UpdatedAt   time.Time      `gorm:"type:datetime"`
+	DeletedAt   gorm.DeletedAt `gorm:"index"`
 }
