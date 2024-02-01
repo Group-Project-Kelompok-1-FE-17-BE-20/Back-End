@@ -6,8 +6,10 @@ import (
 
 type createPaymentRequest struct {
 	OrderID     string `json:"order_id"`
-	BankAccount string `json:"bank_account"`
 	Amount      string `json:"amount"`
+	NamaLengkap string `gorm:"not null" json:"nama_lengkap" form:"nama_lengkap"`
+	Alamat      string `gorm:"type:string" json:"alamat" form:"alamat"`
+	BankAccount string `json:"bank_account"`
 }
 
 type midtransCallback struct {
@@ -37,8 +39,10 @@ func RequestToCore(data interface{}) payment.PaymentCore {
 	switch v := data.(type) {
 	case createPaymentRequest:
 		res.OrderID = v.OrderID
-		res.BankAccount = v.BankAccount
 		res.Amount = v.Amount
+		res.NamaLengkap = v.NamaLengkap
+		res.Alamat = v.Alamat
+		res.BankAccount = v.BankAccount
 	case midtransCallback:
 		res.ID = v.TransactionID
 		res.OrderID = v.OrderID

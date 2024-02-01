@@ -13,6 +13,8 @@ type PaymentCore struct {
 	ID          string
 	OrderID     string `validate:"required"`
 	Amount      string `validate:"required"`
+	NamaLengkap string `gorm:"not null" json:"nama_lengkap" form:"nama_lengkap"`
+	Alamat      string `gorm:"type:string" json:"alamat" form:"alamat"`
 	BankAccount string `validate:"required"`
 	VANumber    string
 	Status      string

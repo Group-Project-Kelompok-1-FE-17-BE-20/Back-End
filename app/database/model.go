@@ -107,6 +107,8 @@ type Payment struct {
 	ID          string `json:"id" gorm:"primaryKey"`
 	OrderID     string `gorm:"type:varchar(21)"`
 	Amount      string
+	NamaLengkap string         `gorm:"not null" json:"nama_lengkap" form:"nama_lengkap"`
+	Alamat      string         `gorm:"type:string" json:"alamat" form:"alamat"`
 	BankAccount string         `gorm:"type:enum('bca', 'bri', 'bni'); default:'bca'"`
 	VANumber    string         `gorm:"type:varchar(21)"`
 	Status      string         `gorm:"type:varchar(21)"`
