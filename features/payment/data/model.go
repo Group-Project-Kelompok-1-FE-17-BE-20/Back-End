@@ -100,6 +100,8 @@ func chargeMidtrans(request payment.PaymentCore) database.Payment {
 		ID:          resp.TransactionID,
 		OrderID:     resp.OrderID,
 		Amount:      resp.GrossAmount,
+		NamaLengkap: request.NamaLengkap,
+		Alamat:      request.Alamat,
 		BankAccount: banksStr,
 		VANumber:    vaNumbersStr,
 		Status:      resp.TransactionStatus,
