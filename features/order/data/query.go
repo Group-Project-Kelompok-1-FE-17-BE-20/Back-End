@@ -117,7 +117,7 @@ func (repo *orderQuery) DetailOrder(db *sql.DB, userID uint) ([]order.DetailOrde
 		"FROM shopping_carts " +
 		"JOIN orders ON shopping_carts.id = orders.shopping_cart_id " +
 		"JOIN order_items ON orders.id = order_items.order_id " +
-		"JOIN products ON order_items.productid = products.id WHERE shopping_carts.user_id = ?;"
+		"JOIN products ON order_items.productid = products.id WHERE shopping_carts.user_id = ? and shopping_carts.status = 'On Going';"
 
 	rows, errSelect := db.Query(query, userID)
 	if errSelect != nil {
