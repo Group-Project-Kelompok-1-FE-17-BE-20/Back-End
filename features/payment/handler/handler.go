@@ -90,17 +90,11 @@ func (tc *paymentHandler) Notification() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data. data not valid", nil))
 		}
 
-		userID, err := middlewares.ExtractToken(c)
-		if err != nil {
-			log.Error("missing or malformed JWT")
-			return c.JSON(http.StatusUnauthorized, responses.ResponseFormat(http.StatusUnauthorized, "", "Missing or Malformed JWT", nil, nil))
-		}
-
 		cfg := config.InitConfig()
 		dbRaw := database.InitRawSql(cfg)
 
 		updateDataCore := ReqMidToCore(updateData)
-		errCall := tc.service.CallbackMid(dbRaw, updateDataCore, userID)
+		errCall := tc.service.CallbackMid(dbRaw, updateDataCore)
 		if errCall != nil {
 			return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error to update data "+errCall.Error(), nil))
 		}
