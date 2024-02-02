@@ -33,8 +33,8 @@ type CoreCart struct {
 // interface untuk Data Layer
 type ItemDataInterface interface {
 	InsertCart(input CoreCart) error
+	SelectCart(userID uint, status string) (CoreCart, error)
 	GetCartID(userID uint) (uint, error)
-	SelectCart(userID uint) (CoreCart, error)
 	GetDataProduct(productID uint) (product.Core, error)
 	Insert(input Core) error
 	Update(productId uint, input Core) error
@@ -46,7 +46,7 @@ type ItemDataInterface interface {
 // interface untuk Service Layer
 type ItemServiceInterface interface {
 	CreateCart(input CoreCart) error
-	GetCart(userID uint) (CoreCart, error)
+	GetCart(userID uint, status string) (CoreCart, error)
 	GetCartID(userID uint) (uint, error)
 	GetDataProduct(productID uint) (product.Core, error)
 	Create(input Core) error

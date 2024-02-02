@@ -32,9 +32,9 @@ func (repo *itemQuery) InsertCart(input shoppingcartitem.CoreCart) error {
 }
 
 // Select implements task.TaskDataInterface.
-func (r *itemQuery) SelectCart(userID uint) (shoppingcartitem.CoreCart, error) {
+func (repo *itemQuery) SelectCart(userID uint, status string) (shoppingcartitem.CoreCart, error) {
 	var cartData database.ShoppingCart
-	tx := r.db.Where("user_id = ?", userID).First(&cartData)
+	tx := repo.db.Where("user_id = ? and status = ?", userID, status).First(&cartData)
 	if tx.Error != nil {
 		return shoppingcartitem.CoreCart{}, tx.Error
 	}
@@ -49,7 +49,7 @@ func (r *itemQuery) SelectCart(userID uint) (shoppingcartitem.CoreCart, error) {
 
 func (repo *itemQuery) GetCartID(userID uint) (uint, error) {
 	var cartData database.ShoppingCart
-	tx := repo.db.Where("user_id = ?", userID).First(&cartData)
+	tx := repo.db.Where("user_id = ? and status = 'On Going'", userID).First(&cartData)
 	if tx.Error != nil {
 		return 0, tx.Error
 	}
