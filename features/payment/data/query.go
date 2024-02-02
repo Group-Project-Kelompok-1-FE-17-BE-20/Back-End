@@ -81,7 +81,7 @@ func (pq *paymentQuery) UpdateStatus(dbRaw *sql.DB, pay payment.PaymentCore) err
 }
 
 // Update implements user.UserDataInterface.
-func (pq *paymentQuery) CallbackMid(dbRaw *sql.DB, input payment.PaymentCore, userID float64) error {
+func (pq *paymentQuery) CallbackMid(dbRaw *sql.DB, input payment.PaymentCore) error {
 	dataGorm := CoreToModel(input)
 	tx := pq.db.Model(&database.Payment{}).Where("order_id = ?", input.OrderID).Updates(dataGorm)
 	if tx.Error != nil {
@@ -98,9 +98,17 @@ func (pq *paymentQuery) CallbackMid(dbRaw *sql.DB, input payment.PaymentCore, us
 		return err
 	}
 
-	query2 := "UPDATE shopping_carts SET status = 'Selesai' WHERE user_id = ?"
+	query2 := "UPDATE shopping_carts " +
+		"SET status = 'Selesai' " +
+		"WHERE id IN ( " +
+		"SELECT shopping_carts.id " +
+		"FROM shopping_carts " +
+		"JOIN orders ON shopping_carts.id = orders.shopping_cart_id " +
+		"WHERE orders.id = ? " +
+		");"
+
 	// Eksekusi query dengan db.Exec
-	_, err2 := dbRaw.Exec(query2, userID)
+	_, err2 := dbRaw.Exec(query2, input.OrderID)
 	if err2 != nil {
 		return err2
 	}

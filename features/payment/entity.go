@@ -33,7 +33,7 @@ type PaymentService interface {
 	Payment(request PaymentCore) (PaymentCore, error)
 	UpdateStatus(dbRaw *sql.DB, pay PaymentCore) error
 	UpdatePayment(request PaymentCore) error
-	CallbackMid(dbRaw *sql.DB, input PaymentCore, userID float64) error
+	CallbackMid(dbRaw *sql.DB, input PaymentCore) error
 }
 
 type PaymentData interface {
@@ -41,5 +41,5 @@ type PaymentData interface {
 	Payment(request PaymentCore) (PaymentCore, error)
 	UpdateStatus(dbRaw *sql.DB, pay PaymentCore) error
 	UpdatePayment(request PaymentCore) error
-	CallbackMid(dbRaw *sql.DB, input PaymentCore, userID float64) error
+	CallbackMid(dbRaw *sql.DB, input PaymentCore) error
 }
