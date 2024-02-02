@@ -75,6 +75,7 @@ func (tc *paymentHandler) Payment() echo.HandlerFunc {
 		}
 
 		log.Sugar().Infoln(payment)
+
 		return c.JSON(http.StatusOK, responses.ResponseFormat(http.StatusOK, "", "Successful Operation", paymentResp(payment), nil))
 
 	}
@@ -83,27 +84,20 @@ func (tc *paymentHandler) Payment() echo.HandlerFunc {
 
 func (tc *paymentHandler) Notification() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		midtransResponse := midtransCallback{}
-		errBind := c.Bind(&midtransResponse)
+		var updateData = midtransCallback{}
+		errBind := c.Bind(&updateData)
 		if errBind != nil {
-			log.Sugar().Errorf("error on binding notification input", errBind)
-			return c.JSON(http.StatusBadRequest, responses.ResponseFormat(http.StatusBadRequest, "", "Bad request: "+errBind.Error(), nil, nil))
+			return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data. data not valid", nil))
 		}
 
-		log.Sugar().Infof("callback midtrans status: %s, order ID: %s, transaction ID: %s",
-			midtransResponse.TransactionStatus, midtransResponse.OrderID, midtransResponse.TransactionID)
-
-		err := tc.service.UpdatePayment(RequestToCore(midtransResponse))
+		updateDataCore := ReqMidToCore(updateData)
+		err := tc.service.CallbackMid(updateDataCore)
 		if err != nil {
-			if strings.Contains(err.Error(), "not found") {
-				return c.JSON(http.StatusNotFound, responses.ResponseFormat(http.StatusNotFound, "", "The requested resource was not found", nil, nil))
-			} else if strings.Contains(err.Error(), "no payment record has been updated") {
-				return c.JSON(http.StatusNotFound, responses.ResponseFormat(http.StatusNotFound, "", "No payment record has been updated", nil, nil))
-			}
-			return c.JSON(http.StatusInternalServerError, responses.ResponseFormat(http.StatusInternalServerError, "", "Internal server error", nil, nil))
+			return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error to update data "+err.Error(), nil))
 		}
 
-		return c.JSON(http.StatusOK, responses.ResponseFormat(http.StatusOK, "", "Successful updated payment status", nil, nil))
+		fmt.Println("transaction success")
+		return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "transaction success", nil))
 	}
 }
 

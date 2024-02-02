@@ -69,6 +69,25 @@ func (ps *paymentService) Payment(request payment.PaymentCore) (payment.PaymentC
 	return result, nil
 }
 
+func (ps *paymentService) UpdateStatus(dbRaw *sql.DB, pay payment.PaymentCore) error {
+	errUpd := ps.query.UpdateStatus(dbRaw, pay)
+	return errUpd
+}
+
+// WebhoocksService implements order.OrderServiceInterface.
+func (ps *paymentService) CallbackMid(input payment.PaymentCore) error {
+	if input.OrderID == "" {
+		return errors.New("cannot find order id")
+	}
+
+	err := ps.query.CallbackMid(input)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // UpdatePayment implements payment.PaymentService
 func (ps *paymentService) UpdatePayment(request payment.PaymentCore) error {
 	err := ps.query.UpdatePayment(request)

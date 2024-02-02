@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"Laptop/app/database"
 	"Laptop/app/middlewares"
 	"Laptop/features/payment"
 
@@ -64,6 +65,33 @@ func (pq *paymentQuery) Payment(request payment.PaymentCore) (payment.PaymentCor
 	fmt.Printf("log ppayment data : %v\n", paymentData)
 	fmt.Printf("log ppayment model: %v\n", paymentModels(paymentData))
 	return paymentModels(paymentData), nil
+}
+
+func (pq *paymentQuery) UpdateStatus(dbRaw *sql.DB, pay payment.PaymentCore) error {
+	// Buat pernyataan SQL UPDATE
+	query := "UPDATE payments SET status = ? WHERE transaction_id = ?"
+
+	// Eksekusi pernyataan SQL
+	_, err := dbRaw.Exec(query, pay.Status, pay.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Update implements user.UserDataInterface.
+func (pq *paymentQuery) CallbackMid(input payment.PaymentCore) error {
+	dataGorm := CoreToModel(input)
+	tx := pq.db.Model(&database.Payment{}).Where("order_id = ?", input.OrderID).Updates(dataGorm)
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	if tx.RowsAffected == 0 {
+		return errors.New("error record not found ")
+	}
+	return nil
 }
 
 // UpdatePayment implements payment.PaymentData
