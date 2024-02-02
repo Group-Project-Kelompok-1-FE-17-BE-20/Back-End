@@ -1,10 +1,10 @@
 package product
 
 import (
+	"mime/multipart"
 	"time"
 
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
-	"github.com/labstack/echo/v4"
 )
 
 type Core struct {
@@ -27,7 +27,7 @@ type Core struct {
 // interface untuk Data Layer
 type ProductDataInterface interface {
 	GetStoreID(userID uint) (uint, error)
-	Photo(echo.Context) *uploader.UploadResult
+	Photo(*multipart.FileHeader) *uploader.UploadResult
 	Insert(input Core) error
 	Update(id int, input Core) error
 	SelectAll() ([]Core, error)
@@ -39,7 +39,7 @@ type ProductDataInterface interface {
 // interface untuk Service Layer
 type ProductServiceInterface interface {
 	GetStoreID(userID uint) (uint, error)
-	Photo(echo.Context) *uploader.UploadResult
+	Photo(*multipart.FileHeader) *uploader.UploadResult
 	Create(input Core) error
 	Update(id int, input Core) error
 	GetAll() ([]Core, error)

@@ -5,10 +5,10 @@ import (
 	"Laptop/features/product"
 	"context"
 	"errors"
+	"mime/multipart"
 
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
-	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
 
@@ -33,9 +33,8 @@ func (repo *productQuery) GetStoreID(userID uint) (uint, error) {
 	return storeID, nil
 }
 
-func (repo *productQuery) Photo(c echo.Context) *uploader.UploadResult {
+func (repo *productQuery) Photo(fileHeader *multipart.FileHeader) *uploader.UploadResult {
 	urlCloudinary := "cloudinary://377166738273893:ga3Zq7Ts84gJ-Ltn-gyMkTgHd40@dltcy9ghn"
-	fileHeader, _ := c.FormFile("gambar")
 
 	file, _ := fileHeader.Open()
 	//log.Println(fileHeader.Filename)
