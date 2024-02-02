@@ -39,7 +39,6 @@ func (tc *paymentHandler) Payment() echo.HandlerFunc {
 
 		//result, err := middlewares.ExtractTokenUserId(c)
 		userID, err := middlewares.ExtractToken(c)
-
 		if err != nil {
 			log.Error("missing or malformed JWT")
 			return c.JSON(http.StatusUnauthorized, responses.ResponseFormat(http.StatusUnauthorized, "", "Missing or Malformed JWT", nil, nil))
@@ -85,18 +84,27 @@ func (tc *paymentHandler) Payment() echo.HandlerFunc {
 func (tc *paymentHandler) Notification() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var updateData = midtransCallback{}
+		fmt.Println("isi update data: ", updateData)
 		errBind := c.Bind(&updateData)
 		if errBind != nil {
 			return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data. data not valid", nil))
 		}
 
-		updateDataCore := ReqMidToCore(updateData)
-		err := tc.service.CallbackMid(updateDataCore)
+		userID, err := middlewares.ExtractToken(c)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error to update data "+err.Error(), nil))
+			log.Error("missing or malformed JWT")
+			return c.JSON(http.StatusUnauthorized, responses.ResponseFormat(http.StatusUnauthorized, "", "Missing or Malformed JWT", nil, nil))
 		}
 
-		fmt.Println("transaction success")
+		cfg := config.InitConfig()
+		dbRaw := database.InitRawSql(cfg)
+
+		updateDataCore := ReqMidToCore(updateData)
+		errCall := tc.service.CallbackMid(dbRaw, updateDataCore, userID)
+		if errCall != nil {
+			return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error to update data "+errCall.Error(), nil))
+		}
+
 		return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "transaction success", nil))
 	}
 }

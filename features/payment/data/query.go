@@ -32,7 +32,7 @@ func (pq *paymentQuery) GetOrderItems(dbRaw *sql.DB, userID uint) (uint, float64
 		"FROM order_items " +
 		"JOIN orders ON order_items.order_id = orders.id " +
 		"JOIN shopping_carts ON orders.shopping_cart_id = shopping_carts.id " +
-		"JOIN users ON shopping_carts.user_id = users.id WHERE users.id = ? " +
+		"JOIN users ON shopping_carts.user_id = users.id WHERE users.id = ? and orders.status = 'On Going' " +
 		"GROUP BY order_items.order_id;"
 
 	rowID := dbRaw.QueryRow(query, userID)
@@ -81,16 +81,30 @@ func (pq *paymentQuery) UpdateStatus(dbRaw *sql.DB, pay payment.PaymentCore) err
 }
 
 // Update implements user.UserDataInterface.
-func (pq *paymentQuery) CallbackMid(input payment.PaymentCore) error {
+func (pq *paymentQuery) CallbackMid(dbRaw *sql.DB, input payment.PaymentCore, userID float64) error {
 	dataGorm := CoreToModel(input)
 	tx := pq.db.Model(&database.Payment{}).Where("order_id = ?", input.OrderID).Updates(dataGorm)
 	if tx.Error != nil {
 		return tx.Error
 	}
-
 	if tx.RowsAffected == 0 {
 		return errors.New("error record not found ")
 	}
+
+	query1 := "UPDATE orders SET status = 'Selesai' WHERE id = ?"
+	// Eksekusi query dengan db.Exec
+	_, err := dbRaw.Exec(query1, input.OrderID)
+	if err != nil {
+		return err
+	}
+
+	query2 := "UPDATE shopping_carts SET status = 'Selesai' WHERE user_id = ?"
+	// Eksekusi query dengan db.Exec
+	_, err2 := dbRaw.Exec(query2, userID)
+	if err2 != nil {
+		return err2
+	}
+
 	return nil
 }
 

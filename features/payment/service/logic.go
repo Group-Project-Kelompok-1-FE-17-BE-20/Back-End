@@ -75,12 +75,12 @@ func (ps *paymentService) UpdateStatus(dbRaw *sql.DB, pay payment.PaymentCore) e
 }
 
 // WebhoocksService implements order.OrderServiceInterface.
-func (ps *paymentService) CallbackMid(input payment.PaymentCore) error {
+func (ps *paymentService) CallbackMid(dbRaw *sql.DB, input payment.PaymentCore, userID float64) error {
 	if input.OrderID == "" {
 		return errors.New("cannot find order id")
 	}
 
-	err := ps.query.CallbackMid(input)
+	err := ps.query.CallbackMid(dbRaw, input, userID)
 	if err != nil {
 		return err
 	}
