@@ -31,7 +31,8 @@ func (handler *ProductHandler) CreateProduct(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
 	}
 
-	responURL := handler.productService.Photo(c)
+	inputPhoto, _ := c.FormFile("gambar")
+	responURL := handler.productService.Photo(inputPhoto)
 	log.Println(responURL.SecureURL)
 
 	newProduct := ProductRequest{}
@@ -84,7 +85,7 @@ func (handler *ProductHandler) UpdateProduct(c echo.Context) error {
 
 	oldPhoto, _ := c.FormFile("gambar")
 	if oldPhoto != nil {
-		responURL := handler.productService.Photo(c)
+		responURL := handler.productService.Photo(oldPhoto)
 		newUpdate.Gambar = responURL.SecureURL
 	}
 

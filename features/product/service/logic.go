@@ -3,9 +3,9 @@ package service
 import (
 	"Laptop/features/product"
 	"errors"
+	"mime/multipart"
 
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
-	"github.com/labstack/echo/v4"
 )
 
 type productService struct {
@@ -25,8 +25,8 @@ func (service *productService) GetStoreID(input uint) (uint, error) {
 	return res, err
 }
 
-func (service *productService) Photo(c echo.Context) *uploader.UploadResult {
-	res := service.productData.Photo(c)
+func (service *productService) Photo(fileHeader *multipart.FileHeader) *uploader.UploadResult {
+	res := service.productData.Photo(fileHeader)
 	return res
 }
 
