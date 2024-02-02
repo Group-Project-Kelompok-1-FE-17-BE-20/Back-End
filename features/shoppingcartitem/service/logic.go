@@ -23,8 +23,8 @@ func (service *itemService) CreateCart(input shoppingcartitem.CoreCart) error {
 }
 
 // GetTaskById implements task.TaskServiceInterface.
-func (service *itemService) GetCart(userID uint) (shoppingcartitem.CoreCart, error) {
-	result, err := service.itemData.SelectCart(userID)
+func (service *itemService) GetCart(userID uint, status string) (shoppingcartitem.CoreCart, error) {
+	result, err := service.itemData.SelectCart(userID, status)
 	if err != nil {
 		return shoppingcartitem.CoreCart{}, err
 	}

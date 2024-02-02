@@ -41,7 +41,7 @@ func (handler *OrderHandler) CreateOrder(c echo.Context) (order.Core, error) {
 	newOrder := OrderRequest{}
 	newOrder.ShoppingCartID = result
 	newOrder.Item = itemResponses
-	newOrder.Status = " "
+	newOrder.Status = "On Going"
 
 	errBind := c.Bind(&newOrder)
 	if errBind != nil {
@@ -68,38 +68,18 @@ func (handler *OrderHandler) CreateOrderItem(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
 	}
 
-	// // dengan cart id, mendapatkan cart items
-	// resGet, err := handler.orderService.GetAllCartItem(cart_id)
-	// if err != nil {
-	// 	return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
-	// }
-
-	// membuat order
-	orderCore, errOr := handler.CreateOrder(c)
-	if errOr != nil {
-		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error make an order"+errOr.Error(), nil))
+	order_id, err := handler.orderService.GetOrderID(cart_id)
+	if order_id == 0 {
+		// membuat order
+		orderCore, errOr := handler.CreateOrder(c)
+		if errOr != nil {
+			return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error make an order"+errOr.Error(), nil))
+		}
+		fmt.Println("data item: ", orderCore.ID, orderCore.Item)
 	}
 
-	// mendapatkan order id dari order yang telah dibuat
-	order_id, err := handler.orderService.GetOrderID(cart_id)
-
-	fmt.Println("data item: ", order_id, orderCore.Item)
-
-	// // insert via gorm
-	// errCreate := handler.orderService.CreateOrderItem(order_id, orderCore.Item)
-	// if errCreate != nil {
-	// 	return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error insert data"+errCreate.Error(), nil))
-	// }
-
-	// insert via sql raw
-	// // Membuka koneksi ke database
-	// cfg := config.InitConfig()
-	// dbRaw := database.InitRawSql(cfg)
-
-	// errCreate2 := handler.orderService.CreateOrderItemSRaw(dbRaw, order_id, orderCore.Item)
-	// if errCreate2 != nil {
-	// 	return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error insert data"+errCreate2.Error(), nil))
-	// }
+	// // mendapatkan order id dari order yang telah dibuat
+	// orderID, err := handler.orderService.GetOrderID(cart_id)
 
 	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success insert data", nil))
 }

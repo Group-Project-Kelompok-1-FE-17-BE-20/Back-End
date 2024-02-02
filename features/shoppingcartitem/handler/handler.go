@@ -32,7 +32,7 @@ func (handler *ItemHandler) GetNewCart(c echo.Context) error {
 
 	// Tambahkan userID ke objek CartRequest
 	newCart.UserID = userID
-	newCart.Status = "Kosong"
+	newCart.Status = "On Going"
 
 	cartCore := CartReqToCore(newCart)
 
@@ -41,7 +41,7 @@ func (handler *ItemHandler) GetNewCart(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error insert data"+errCreate.Error(), nil))
 	}
 
-	result, err := handler.itemService.GetCart(userID)
+	result, err := handler.itemService.GetCart(userID, newCart.Status)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
 	}

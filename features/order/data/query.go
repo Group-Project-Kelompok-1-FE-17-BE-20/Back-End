@@ -24,7 +24,7 @@ func New(db *gorm.DB) order.OrderDataInterface {
 
 func (repo *orderQuery) GetCartID(userID uint) (uint, error) {
 	var cartData database.ShoppingCart
-	tx := repo.db.Where("user_id = ?", userID).First(&cartData)
+	tx := repo.db.Where("user_id = ? and status = 'On Going'", userID).First(&cartData)
 	if tx.Error != nil {
 		return 0, tx.Error
 	}
@@ -61,7 +61,7 @@ func (repo *orderQuery) Insert(input order.Core) error {
 // Insert implements order.OrderDataInterface.
 func (repo *orderQuery) GetOrderID(cart_id uint) (uint, error) {
 	var orderData database.Order
-	tx := repo.db.Where("shopping_cart_id = ?", cart_id).First(&orderData)
+	tx := repo.db.Where("shopping_cart_id = ? and status = 'On Going'", cart_id).First(&orderData)
 	if tx.Error != nil {
 		return 0, tx.Error
 	}
