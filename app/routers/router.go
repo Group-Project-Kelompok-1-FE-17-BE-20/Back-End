@@ -114,5 +114,5 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.GET("/alluser", userHandlerAPI.GetAllUser)
 
 	e.POST("/payments", paymentHandler.Payment(), middlewares.JWTMiddleware())
-	e.POST("/payments/callback", paymentHandler.Notification())
+	e.POST("/payments/callback", paymentHandler.Notification(), middlewares.JWTMiddleware())
 }
