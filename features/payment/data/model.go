@@ -44,6 +44,12 @@ func paymentEntities(p payment.PaymentCore) database.Payment {
 	}
 }
 
+func CoreToModel(input payment.PaymentCore) database.Payment {
+	return database.Payment{
+		Status: input.Status,
+	}
+}
+
 func chargeMidtrans(request payment.PaymentCore) database.Payment {
 	var bankMap = map[string]coreapi.BankTransferDetails{
 		"bni": {

@@ -11,13 +11,13 @@ import (
 type PaymentCore struct {
 	gorm.Model
 	ID          string
-	OrderID     string `validate:"required"`
+	OrderID     string `validate:"required" json:"order_id"`
 	Amount      string `validate:"required"`
 	BankAccount string `validate:"required"`
 	VANumber    string
 	NamaLengkap string `gorm:"not null" json:"nama_lengkap" form:"nama_lengkap"`
 	Alamat      string `gorm:"type:string" json:"alamat" form:"alamat"`
-	Status      string
+	Status      string `json:"transaction_status"`
 	UserID      uint
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
@@ -31,11 +31,15 @@ type PaymentHandler interface {
 type PaymentService interface {
 	GetOrderItems(dbRaw *sql.DB, userID uint) (uint, float64)
 	Payment(request PaymentCore) (PaymentCore, error)
+	UpdateStatus(dbRaw *sql.DB, pay PaymentCore) error
 	UpdatePayment(request PaymentCore) error
+	CallbackMid(input PaymentCore) error
 }
 
 type PaymentData interface {
 	GetOrderItems(dbRaw *sql.DB, userID uint) (uint, float64)
 	Payment(request PaymentCore) (PaymentCore, error)
+	UpdateStatus(dbRaw *sql.DB, pay PaymentCore) error
 	UpdatePayment(request PaymentCore) error
+	CallbackMid(input PaymentCore) error
 }
