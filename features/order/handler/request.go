@@ -20,11 +20,10 @@ type OrderItemRequest struct {
 }
 
 type HistoryRequest struct {
-	OrderID        uint      `gorm:"not null" json:"orderId" form:"orderId"`
-	ShoppingCartID uint      `gorm:"not null" json:"cartId" form:"cartId"`
-	TglOrder       time.Time `gorm:"not null" json:"date_order" form:"date_order"`
-	TotalBayar     float64   `gorm:"not null" json:"total" form:"total"`
-	StatusOrder    string    `gorm:"not null" json:"status_order" form:"status_order"`
+	PaymentID         string    `gorm:"not null" json:"id" form:"id"`
+	TotalAmount       float64   `gorm:"not null" json:"totalAmount" form:"totalAmount"`
+	TglOrder          time.Time `gorm:"not null" json:"date_order" form:"date_order"`
+	TransactionStatus string    `gorm:"not null" json:"transaction_status" form:"transaction_status"`
 }
 
 func ResGetRequest(data []shoppingcartitem.Core) []OrderItemRequest {
@@ -92,10 +91,9 @@ func RequestToCore(input OrderRequest) order.Core {
 
 func HistoryToCore(input HistoryRequest) order.CoreHistory {
 	return order.CoreHistory{
-		OrderID:        input.OrderID,
-		ShoppingCartID: input.ShoppingCartID,
-		TglOrder:       input.TglOrder,
-		TotalBayar:     input.TotalBayar,
-		StatusOrder:    input.StatusOrder,
+		PaymentID:         input.PaymentID,
+		TotalAmount:       input.TotalAmount,
+		TglOrder:          input.TglOrder,
+		TransactionStatus: input.TransactionStatus,
 	}
 }

@@ -1,6 +1,7 @@
 package order
 
 import (
+	"Laptop/features/payment"
 	"Laptop/features/shoppingcartitem"
 	"database/sql"
 	"time"
@@ -32,11 +33,10 @@ type DetailOrder struct {
 }
 
 type CoreHistory struct {
-	OrderID        uint      `gorm:"not null" json:"orderId" form:"orderId"`
-	ShoppingCartID uint      `gorm:"not null" json:"cartId" form:"cartId"`
-	TglOrder       time.Time `gorm:"not null" json:"date_order" form:"date_order"`
-	TotalBayar     float64   `gorm:"not null" json:"total" form:"total"`
-	StatusOrder    string    `gorm:"not null" json:"status_order" form:"status_order"`
+	PaymentID         string    `gorm:"not null" json:"id" form:"id"`
+	TotalAmount       float64   `gorm:"not null" json:"totalAmount" form:"totalAmount"`
+	TglOrder          time.Time `gorm:"not null" json:"date_order" form:"date_order"`
+	TransactionStatus string    `gorm:"not null" json:"transaction_status" form:"transaction_status"`
 }
 
 // interface untuk Data Layer
@@ -49,8 +49,9 @@ type OrderDataInterface interface {
 	CreateOrderItemSRaw(db *sql.DB, order_id uint, input []CoreItem) error
 	DetailOrder(db *sql.DB, userID uint) ([]DetailOrder, uint, error)
 	DateOrder(db *sql.DB, orderID uint) (time.Time, error)
-	CreateHistory(CoreHistory) error
+	//CreateHistory(CoreHistory) error
 	Cancel(db *sql.DB, orderID uint) error
+	GetAllPayments(db *sql.DB, user_id uint) ([]payment.PaymentCore, error)
 }
 
 // interface untuk Service Layer
@@ -63,6 +64,7 @@ type OrderServiceInterface interface {
 	CreateOrderItemSRaw(db *sql.DB, order_id uint, input []CoreItem) error
 	DetailOrder(db *sql.DB, userID uint) ([]DetailOrder, uint, error)
 	DateOrder(db *sql.DB, orderID uint) (time.Time, error)
-	CreateHistory(CoreHistory) error
+	//CreateHistory(CoreHistory) error
 	Cancel(db *sql.DB, orderID uint) error
+	GetAllPayments(db *sql.DB, user_id uint) ([]payment.PaymentCore, error)
 }

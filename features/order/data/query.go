@@ -3,6 +3,7 @@ package data
 import (
 	"Laptop/app/database"
 	"Laptop/features/order"
+	"Laptop/features/payment"
 	"Laptop/features/shoppingcartitem"
 	"database/sql"
 	"fmt"
@@ -148,16 +149,16 @@ func (repo *orderQuery) DateOrder(db *sql.DB, order_id uint) (time.Time, error) 
 }
 
 // Insert implements order.OrderDataInterface.
-func (repo *orderQuery) CreateHistory(input order.CoreHistory) error {
-	newHistory := HistoryToModel(input)
+// func (repo *orderQuery) CreateHistory(input payment.PaymentCore) error {
+// 	newHistory := HistoryToModel(input)
 
-	tx := repo.db.Create(&newHistory) // proses query insert
-	if tx.Error != nil {
-		return tx.Error
-	}
+// 	tx := repo.db.Create(&newHistory) // proses query insert
+// 	if tx.Error != nil {
+// 		return tx.Error
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 func (repo *orderQuery) Cancel(db *sql.DB, order_id uint) error {
 	// result1, errExec := db.Exec("delete from order_items where id = ?", order_id)
@@ -185,4 +186,33 @@ func (repo *orderQuery) Cancel(db *sql.DB, order_id uint) error {
 	}
 
 	return nil
+}
+
+func (repo *orderQuery) GetAllPayments(db *sql.DB, userID uint) ([]payment.PaymentCore, error) {
+	var ordersList []payment.PaymentCore
+
+	query := "SELECT payments.id, payments.amount, payments.updated_at, payments.status " +
+		"FROM payments " +
+		"JOIN orders ON payments.order_id = orders.id " +
+		"JOIN shopping_carts ON orders.shopping_cart_id = shopping_carts.id " +
+		"JOIN users ON shopping_carts.user_id = users.id " +
+		"WHERE users.id = ?"
+
+	rows, errSelect := db.Query(query, userID)
+	if errSelect != nil {
+		log.Fatal("cannot run select query: ", errSelect)
+	}
+
+	for rows.Next() {
+		var rowOrder payment.PaymentCore
+		errScan := rows.Scan(&rowOrder.ID, &rowOrder.Amount, &rowOrder.UpdatedAt, &rowOrder.Status)
+		if errScan != nil {
+			log.Fatal("cannot run scan query: ", errScan.Error())
+		}
+		ordersList = append(ordersList, rowOrder)
+	}
+
+	fmt.Println(ordersList)
+
+	return ordersList, nil
 }

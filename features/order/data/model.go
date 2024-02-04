@@ -3,6 +3,7 @@ package data
 import (
 	"Laptop/app/database"
 	"Laptop/features/order"
+	"Laptop/features/payment"
 	"Laptop/features/shoppingcartitem"
 )
 
@@ -93,14 +94,28 @@ func ItemsCoreToModel(orderID uint, data []order.CoreItem) []database.OrderItem 
 	return itemsData
 }
 
-func HistoryToModel(input order.CoreHistory) database.OrderHistory {
-	return database.OrderHistory{
-		OrderID:        input.OrderID,
-		ShoppingCartID: input.ShoppingCartID,
-		TglOrder:       input.TglOrder,
-		TotalBayar:     input.TotalBayar,
-		StatusOrder:    input.StatusOrder,
+func HistoryToModel(input payment.PaymentCore) database.Payment {
+	return database.Payment{
+		ID:        input.ID,
+		Amount:    input.Amount,
+		UpdatedAt: input.UpdatedAt,
+		Status:    input.Status,
 	}
+}
+
+func SliceHistoryToModel(input []payment.PaymentCore) []database.Payment {
+	var historiesData []database.Payment
+	for _, value := range input {
+		var historyInput = database.Payment{
+			ID:        value.ID,
+			Amount:    value.Amount,
+			UpdatedAt: value.UpdatedAt,
+			Status:    value.Status,
+		}
+		historiesData = append(historiesData, historyInput)
+	}
+
+	return historiesData
 }
 
 // func CoretoModelGorm(data []order.Core) []database.Order {
