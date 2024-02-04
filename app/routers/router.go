@@ -106,13 +106,15 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	// order
 	e.POST("/orders", orderHandlerAPI.CreateOrderItem, middlewares.JWTMiddleware())
 	e.GET("/orders", orderHandlerAPI.GetDetailOrder, middlewares.JWTMiddleware())
-	e.DELETE("/orders-cancel", orderHandlerAPI.CancelOrder, middlewares.JWTMiddleware())
+	//e.DELETE("/orders-cancel", orderHandlerAPI.CancelOrder, middlewares.JWTMiddleware())
+	e.GET("/orders-history", orderHandlerAPI.OrderHistories, middlewares.JWTMiddleware())
 
 	// admin
 	e.POST("/admin-login", adminHandlerAPI.Login)
 	e.GET("/admin", adminHandlerAPI.GetAllUser)
 	e.GET("/alluser", userHandlerAPI.GetAllUser)
 
+	// payment
 	e.POST("/payments", paymentHandler.Payment(), middlewares.JWTMiddleware())
 	e.POST("/payments/callback", paymentHandler.Notification())
 }

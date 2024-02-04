@@ -99,45 +99,61 @@ func (handler *OrderHandler) GetDetailOrder(c echo.Context) error {
 	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success read data", result))
 }
 
-func (handler *OrderHandler) CancelOrder(c echo.Context) error {
-	history := HistoryRequest{}
-	// Membuka koneksi ke database
+// func (handler *OrderHandler) CancelOrder(c echo.Context) error {
+// 	history := HistoryRequest{}
+// 	// Membuka koneksi ke database
+// 	cfg := config.InitConfig()
+// 	dbRaw := database.InitRawSql(cfg)
+
+// 	userID := middlewares.ExtractTokenUserId(c)
+// 	_, resID, err := handler.orderService.DetailOrder(dbRaw, uint(userID))
+// 	if err != nil {
+// 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error get data"+err.Error(), nil))
+// 	}
+
+// 	date, err := handler.orderService.DateOrder(dbRaw, uint(userID))
+// 	if err != nil {
+// 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error get data"+err.Error(), nil))
+// 	}
+
+// 	// cartID, err := handler.orderService.GetCartID(userID)
+// 	// if err != nil {
+// 	// 	return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
+// 	// }
+
+// 	// history.OrderID = resID
+// 	// history.ShoppingCartID = cartID
+// 	history.TglOrder = date
+// 	// history.TotalBayar = 0.0
+// 	// history.StatusOrder = "Cancel"
+
+// 	historyCore := HistoryToCore(history)
+
+// 	errDel := handler.orderService.Cancel(dbRaw, resID)
+// 	if errDel != nil {
+// 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error cancel data. "+errDel.Error(), nil))
+// 	}
+
+// 	errCreate := handler.orderService.CreateHistory(historyCore)
+// 	if errCreate != nil {
+// 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error insert data"+errCreate.Error(), nil))
+// 	}
+
+// 	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success cancel order", nil))
+// }
+
+func (handler *OrderHandler) OrderHistories(c echo.Context) error {
+	userID := middlewares.ExtractTokenUserId(c)
+
 	cfg := config.InitConfig()
 	dbRaw := database.InitRawSql(cfg)
 
-	userID := middlewares.ExtractTokenUserId(c)
-	_, resID, err := handler.orderService.DetailOrder(dbRaw, uint(userID))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error get data"+err.Error(), nil))
-	}
-
-	date, err := handler.orderService.DateOrder(dbRaw, uint(userID))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error get data"+err.Error(), nil))
-	}
-
-	cartID, err := handler.orderService.GetCartID(userID)
+	allOrders, err := handler.orderService.GetAllPayments(dbRaw, userID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error read data, "+err.Error(), nil))
 	}
 
-	history.OrderID = resID
-	history.ShoppingCartID = cartID
-	history.TglOrder = date
-	history.TotalBayar = 0.0
-	history.StatusOrder = "Cancel"
+	allOrdersResponse := CoreToResponseHistory(allOrders)
 
-	historyCore := HistoryToCore(history)
-
-	errDel := handler.orderService.Cancel(dbRaw, resID)
-	if errDel != nil {
-		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error cancel data. "+errDel.Error(), nil))
-	}
-
-	errCreate := handler.orderService.CreateHistory(historyCore)
-	if errCreate != nil {
-		return c.JSON(http.StatusInternalServerError, responses.WebResponse(http.StatusInternalServerError, "error insert data"+errCreate.Error(), nil))
-	}
-
-	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success cancel order", nil))
+	return c.JSON(http.StatusOK, responses.WebResponse(http.StatusOK, "success read order histories", allOrdersResponse))
 }

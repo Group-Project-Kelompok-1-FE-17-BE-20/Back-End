@@ -2,6 +2,7 @@ package service
 
 import (
 	"Laptop/features/order"
+	"Laptop/features/payment"
 	"Laptop/features/shoppingcartitem"
 	"database/sql"
 	"time"
@@ -61,12 +62,18 @@ func (service *orderService) DateOrder(input *sql.DB, order_id uint) (time.Time,
 	return result, err
 }
 
-func (service *orderService) CreateHistory(input order.CoreHistory) error {
-	err := service.orderData.CreateHistory(input)
-	return err
-}
+// func (service *orderService) CreateHistory(input order.CoreHistory) error {
+// 	err := service.orderData.CreateHistory(input)
+// 	return err
+// }
 
 func (service *orderService) Cancel(db *sql.DB, order_id uint) error {
 	err := service.orderData.Cancel(db, order_id)
 	return err
+}
+
+func (service *orderService) GetAllPayments(db *sql.DB, input uint) ([]payment.PaymentCore, error) {
+	// logic validation
+	res, err := service.orderData.GetAllPayments(db, input)
+	return res, err
 }
