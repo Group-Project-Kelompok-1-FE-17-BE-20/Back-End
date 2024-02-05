@@ -17,14 +17,14 @@ type Core struct {
 }
 
 type CoreItem struct {
-	Productid   uint    `gorm:"not null" json:"prod_id" form:"prod_id"`
+	ProductID   uint    `gorm:"not null" json:"productId" form:"productId"`
 	Jumlah      uint    `gorm:"not null" json:"jumlah" form:"jumlah"`
 	TotalAmount float64 `gorm:"not null" json:"totalAmount" form:"totalAmount"`
 }
 
 type DetailOrder struct {
 	OrderID     uint    `gorm:"not null" json:"orderId" form:"orderId"`
-	Productid   uint    `gorm:"not null" json:"prod_id" form:"prod_id"`
+	ProductID   uint    `gorm:"not null" json:"productId" form:"productId"`
 	Brand       string  `gorm:"type:string" json:"brand" form:"brand"`
 	RAM         string  `gorm:"type:string" json:"ram" form:"ram"`
 	Storage     string  `gorm:"type:string" json:"storage" form:"storage"`
