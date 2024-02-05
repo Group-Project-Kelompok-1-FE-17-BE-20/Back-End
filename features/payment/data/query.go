@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 
-	"Laptop/app/database"
 	"Laptop/app/middlewares"
 	"Laptop/features/payment"
 
@@ -156,22 +155,34 @@ func (pq *paymentQuery) UpdateStock(dbRaw *sql.DB, orderID string) error {
 
 // Update implements user.UserDataInterface.
 func (pq *paymentQuery) CallbackMid(dbRaw *sql.DB, input payment.PaymentCore) error {
-	dataGorm := CoreToModel(input)
-	tx := pq.db.Model(&database.Payment{}).Where("order_id = ?", input.OrderID).Updates(dataGorm)
-	if tx.Error != nil {
-		return tx.Error
+	// dataGorm := CoreToModel(input)
+	// tx := pq.db.Model(&database.Payment{}).Where("order_id = ?", dataGorm.OrderID).Updates(dataGorm.Status)
+	// if tx.Error != nil {
+	// 	fmt.Println("Error updating payment status:", tx.Error)
+	// 	return errors.New("failed to update payment status")
+	// }
+
+	fmt.Println("data input buat update: ", input)
+
+	// update status payment
+	query := "UPDATE payments SET status = ? WHERE order_id = ?"
+	tx, err := dbRaw.Exec(query, input.Status, input.OrderID)
+	if err != nil {
+		return errors.New("failed to update payment status")
 	}
 
-	if tx.RowsAffected == 0 {
+	affected, _ := tx.RowsAffected()
+	if affected == 0 {
 		return errors.New("error record not found ")
-	} else if tx.RowsAffected != 0 {
+	} else if affected != 0 {
+		// update orders
 		query1 := "UPDATE orders SET status = 'Selesai' WHERE id = ?"
-		// Eksekusi query dengan db.Exec
 		_, err := dbRaw.Exec(query1, input.OrderID)
 		if err != nil {
 			return err
 		}
 
+		// update shopping carts
 		query2 := "UPDATE shopping_carts " +
 			"SET status = 'Selesai' " +
 			"WHERE id IN ( " +
@@ -181,12 +192,12 @@ func (pq *paymentQuery) CallbackMid(dbRaw *sql.DB, input payment.PaymentCore) er
 			"WHERE orders.id = ? " +
 			");"
 
-		// Eksekusi query dengan db.Exec
 		_, err2 := dbRaw.Exec(query2, input.OrderID)
 		if err2 != nil {
 			return err2
 		}
 
+		// update stock
 		errStock := pq.UpdateStock(dbRaw, input.OrderID)
 		if errStock != nil {
 			return errStock
