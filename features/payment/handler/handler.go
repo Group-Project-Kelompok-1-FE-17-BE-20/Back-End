@@ -83,12 +83,13 @@ func (tc *paymentHandler) Payment() echo.HandlerFunc {
 
 func (tc *paymentHandler) Notification() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var updateData = midtransCallback{}
-		fmt.Println("isi update data: ", updateData)
+		updateData := midtransCallback{}
 		errBind := c.Bind(&updateData)
 		if errBind != nil {
 			return c.JSON(http.StatusBadRequest, responses.WebResponse(http.StatusBadRequest, "error bind data. data not valid", nil))
 		}
+
+		fmt.Println("isi update data: ", updateData)
 
 		cfg := config.InitConfig()
 		dbRaw := database.InitRawSql(cfg)

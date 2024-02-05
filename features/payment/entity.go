@@ -5,11 +5,9 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 )
 
 type PaymentCore struct {
-	gorm.Model
 	ID          string
 	OrderID     string `validate:"required" json:"order_id"`
 	Amount      string `validate:"required"`
