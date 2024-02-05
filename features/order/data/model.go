@@ -39,7 +39,7 @@ func CoreItemToItemGorm(data []order.CoreItem) []database.OrderItem {
 	var results []database.OrderItem
 	for _, input := range data {
 		var item = database.OrderItem{
-			Productid:   input.Productid,
+			ProductID:   input.ProductID,
 			Jumlah:      input.Jumlah,
 			TotalAmount: input.TotalAmount,
 		}
@@ -84,7 +84,7 @@ func ItemsCoreToModel(orderID uint, data []order.CoreItem) []database.OrderItem 
 	for _, input := range data {
 		var itemInput = database.OrderItem{
 			OrderID:     orderID,
-			Productid:   input.Productid,
+			ProductID:   input.ProductID,
 			Jumlah:      input.Jumlah,
 			TotalAmount: input.TotalAmount,
 		}

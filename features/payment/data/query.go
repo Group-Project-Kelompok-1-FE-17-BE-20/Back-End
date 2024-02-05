@@ -80,6 +80,80 @@ func (pq *paymentQuery) UpdateStatus(dbRaw *sql.DB, pay payment.PaymentCore) err
 	return nil
 }
 
+func (pq *paymentQuery) UpdateStock(dbRaw *sql.DB, orderID string) error {
+	// menghitung stock dari product yang dibeli
+	query1 := "SELECT products.id, products.stock FROM products " +
+		"JOIN order_items ON products.id = order_items.product_id " +
+		"JOIN orders ON order_items.order_id = orders.id " +
+		"WHERE orders.id = ?"
+
+	rows, err1 := dbRaw.Query(query1, orderID)
+	if err1 != nil {
+		return err1
+	}
+
+	var listProductID []uint
+	var listStock []int
+	for rows.Next() {
+		var product_id uint
+		var stock int
+		if err := rows.Scan(&product_id, &stock); err != nil {
+			return err
+		}
+		listProductID = append(listProductID, product_id)
+		listStock = append(listStock, stock)
+
+	}
+
+	fmt.Println("daftar product id: ", listProductID)
+	fmt.Println("daftar stock: ", listStock)
+
+	// menghitung banyak produk yang dibeli
+	query2 := "SELECT order_items.jumlah FROM order_items " +
+		"JOIN orders ON order_items.order_id = orders.id " +
+		"WHERE orders.id = ?"
+
+	rows, err2 := dbRaw.Query(query2, orderID)
+	if err2 != nil {
+		return err2
+	}
+
+	var listJumlah []int
+	for rows.Next() {
+		var jumlah int
+		if err := rows.Scan(&jumlah); err != nil {
+			return err
+		}
+		listJumlah = append(listJumlah, jumlah)
+	}
+
+	// proses pengurangan stock
+	if len(listStock) != len(listJumlah) {
+		fmt.Println("Panjang slice tidak sama.")
+	}
+
+	var result []int
+	for i := 0; i < len(listStock); i++ {
+		listStock[i] -= listJumlah[i]
+		itemRes := listStock[i]
+		result = append(result, itemRes)
+	}
+
+	// proses update stock baru ke database
+	for i := 0; i < len(result); i++ {
+		query := "UPDATE products SET stock = ? WHERE id = ?"
+		tx, err := dbRaw.Exec(query, result[i], listProductID[i])
+		if err != nil {
+			return err
+		}
+
+		stockRows, _ := tx.RowsAffected()
+		fmt.Println("Stock rows affected: ", stockRows)
+	}
+
+	return nil
+}
+
 // Update implements user.UserDataInterface.
 func (pq *paymentQuery) CallbackMid(dbRaw *sql.DB, input payment.PaymentCore) error {
 	dataGorm := CoreToModel(input)
@@ -87,30 +161,36 @@ func (pq *paymentQuery) CallbackMid(dbRaw *sql.DB, input payment.PaymentCore) er
 	if tx.Error != nil {
 		return tx.Error
 	}
+
 	if tx.RowsAffected == 0 {
 		return errors.New("error record not found ")
-	}
+	} else if tx.RowsAffected != 0 {
+		query1 := "UPDATE orders SET status = 'Selesai' WHERE id = ?"
+		// Eksekusi query dengan db.Exec
+		_, err := dbRaw.Exec(query1, input.OrderID)
+		if err != nil {
+			return err
+		}
 
-	query1 := "UPDATE orders SET status = 'Selesai' WHERE id = ?"
-	// Eksekusi query dengan db.Exec
-	_, err := dbRaw.Exec(query1, input.OrderID)
-	if err != nil {
-		return err
-	}
+		query2 := "UPDATE shopping_carts " +
+			"SET status = 'Selesai' " +
+			"WHERE id IN ( " +
+			"SELECT shopping_carts.id " +
+			"FROM shopping_carts " +
+			"JOIN orders ON shopping_carts.id = orders.shopping_cart_id " +
+			"WHERE orders.id = ? " +
+			");"
 
-	query2 := "UPDATE shopping_carts " +
-		"SET status = 'Selesai' " +
-		"WHERE id IN ( " +
-		"SELECT shopping_carts.id " +
-		"FROM shopping_carts " +
-		"JOIN orders ON shopping_carts.id = orders.shopping_cart_id " +
-		"WHERE orders.id = ? " +
-		");"
+		// Eksekusi query dengan db.Exec
+		_, err2 := dbRaw.Exec(query2, input.OrderID)
+		if err2 != nil {
+			return err2
+		}
 
-	// Eksekusi query dengan db.Exec
-	_, err2 := dbRaw.Exec(query2, input.OrderID)
-	if err2 != nil {
-		return err2
+		errStock := pq.UpdateStock(dbRaw, input.OrderID)
+		if errStock != nil {
+			return errStock
+		}
 	}
 
 	return nil

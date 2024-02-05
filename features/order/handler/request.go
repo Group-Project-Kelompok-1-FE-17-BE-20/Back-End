@@ -14,7 +14,7 @@ type OrderRequest struct {
 
 type OrderItemRequest struct {
 	OrderID     uint    `gorm:"not null" json:"orderId" form:"orderId"`
-	Productid   uint    `gorm:"not null" json:"prod_id" form:"prod_id"`
+	ProductID   uint    `gorm:"not null" json:"productId" form:"productId"`
 	Jumlah      uint    `gorm:"not null" json:"jumlah" form:"jumlah"`
 	TotalAmount float64 `gorm:"not null" json:"totalAmount" form:"totalAmount"`
 }
@@ -30,7 +30,7 @@ func ResGetRequest(data []shoppingcartitem.Core) []OrderItemRequest {
 	var results []OrderItemRequest
 	for _, input := range data {
 		var item = OrderItemRequest{
-			Productid:   input.ProductID,
+			ProductID:   input.ProductID,
 			Jumlah:      input.Quantity,
 			TotalAmount: input.TotalPrice,
 		}
@@ -43,7 +43,7 @@ func ItemRequestToCoreItem(data []OrderItemRequest) []order.CoreItem {
 	var results []order.CoreItem
 	for _, input := range data {
 		var item = order.CoreItem{
-			Productid:   input.Productid,
+			ProductID:   input.ProductID,
 			Jumlah:      input.Jumlah,
 			TotalAmount: input.TotalAmount,
 		}
@@ -57,7 +57,7 @@ func IdAndItemToReq(order_id uint, data []order.CoreItem) []OrderItemRequest {
 	for _, input := range data {
 		var item = OrderItemRequest{
 			OrderID:     order_id,
-			Productid:   input.Productid,
+			ProductID:   input.ProductID,
 			Jumlah:      input.Jumlah,
 			TotalAmount: input.TotalAmount,
 		}

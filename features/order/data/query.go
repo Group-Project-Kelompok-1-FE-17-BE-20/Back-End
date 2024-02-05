@@ -94,12 +94,12 @@ func (repo *orderQuery) CreateOrderItem(orderID uint, input []order.CoreItem) er
 
 func (repo *orderQuery) CreateOrderItemSRaw(db *sql.DB, orderID uint, input []order.CoreItem) error {
 	// Query SQL dan parameter placeholder
-	sqlQuery := "INSERT INTO order_items (order_id, productid, jumlah, total_amount) VALUES (?, ?, ?, ?)"
+	sqlQuery := "INSERT INTO order_items (order_id, product_id, jumlah, total_amount) VALUES (?, ?, ?, ?)"
 
 	// Loop untuk setiap OrderItem
 	for _, oi := range input {
 		// Eksekusi query SQL
-		_, err := db.Exec(sqlQuery, orderID, oi.Productid, oi.Jumlah, oi.TotalAmount)
+		_, err := db.Exec(sqlQuery, orderID, oi.ProductID, oi.Jumlah, oi.TotalAmount)
 		if err != nil {
 			log.Fatal("cannot run insert query", err)
 		}
@@ -113,12 +113,12 @@ func (repo *orderQuery) DetailOrder(db *sql.DB, userID uint) ([]order.DetailOrde
 	var itemsOrdered []order.DetailOrder
 	var order_id uint
 
-	query := "SELECT order_items.order_id, order_items.productid, products.brand, products.ram, products.storage, " +
+	query := "SELECT order_items.order_id, order_items.product_id, products.brand, products.ram, products.storage, " +
 		"order_items.jumlah, order_items.total_amount " +
 		"FROM shopping_carts " +
 		"JOIN orders ON shopping_carts.id = orders.shopping_cart_id " +
 		"JOIN order_items ON orders.id = order_items.order_id " +
-		"JOIN products ON order_items.productid = products.id WHERE shopping_carts.user_id = ? and shopping_carts.status = 'On Going';"
+		"JOIN products ON order_items.product_id = products.id WHERE shopping_carts.user_id = ? and shopping_carts.status = 'On Going';"
 
 	rows, errSelect := db.Query(query, userID)
 	if errSelect != nil {
@@ -127,7 +127,7 @@ func (repo *orderQuery) DetailOrder(db *sql.DB, userID uint) ([]order.DetailOrde
 
 	for rows.Next() {
 		var Row_item order.DetailOrder
-		errScan := rows.Scan(&Row_item.OrderID, &Row_item.Productid, &Row_item.Brand, &Row_item.RAM, &Row_item.Storage, &Row_item.Jumlah, &Row_item.TotalAmount)
+		errScan := rows.Scan(&Row_item.OrderID, &Row_item.ProductID, &Row_item.Brand, &Row_item.RAM, &Row_item.Storage, &Row_item.Jumlah, &Row_item.TotalAmount)
 		if errScan != nil {
 			log.Fatal("cannot run scan query: ", errScan.Error())
 		}

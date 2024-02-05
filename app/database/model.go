@@ -78,9 +78,10 @@ type Order struct {
 type OrderItem struct {
 	gorm.Model
 	OrderID     uint    `gorm:"not null" json:"orderId" form:"orderId"`
-	Productid   uint    `gorm:"not null" json:"prod_id" form:"prod_id"`
+	ProductID   uint    `gorm:"not null" json:"productId" form:"productId"`
 	Jumlah      uint    `gorm:"not null" json:"jumlah" form:"jumlah"`
 	TotalAmount float64 `gorm:"not null" json:"totalAmount" form:"totalAmount"`
+	Product     Product
 }
 
 type Admin struct {
